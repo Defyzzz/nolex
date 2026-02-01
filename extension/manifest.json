@@ -1,0 +1,39 @@
+{
+    "manifest_version": 3,
+    "name": "Nolex",
+    "version": "1.3",
+    "description": "Protects against sensitive data leaks when uploading files",
+    "permissions": [
+        "scripting",
+        "storage",
+        "activeTab"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "run_at": "document_start"
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "interceptor.js",
+                "detector.js",
+                "dialog.js",
+                "dialog.html",
+                "dialog.css"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обнаружены чувствительные данные</title>
+</head>
+
+<body>
+    <div id="sanitizer-dialog-overlay" class="sanitizer-overlay">
+        <div class="sanitizer-dialog">
+            <div class="sanitizer-header">
+                <div class="sanitizer-icon">⚠️</div>
+                <h2>Обнаружены чувствительные данные</h2>
+            </div>
+
+            <div class="sanitizer-content">
+                <p class="sanitizer-warning">
+                    В файле <strong id="sanitizer-filename"></strong> найдена потенциально конфиденциальная информация.
+                </p>
+
+                <div class="sanitizer-preview">
+                    <h3>Предварительный просмотр:</h3>
+                    <div id="sanitizer-text-preview" class="text-preview"></div>
+                </div>
+
+                <div class="sanitizer-findings">
+                    <h3>Найденные данные:</h3>
+                    <div id="sanitizer-findings-list" class="findings-list"></div>
+                </div>
+            </div>
+
+            <div class="sanitizer-footer">
+                <button id="sanitizer-btn-cancel" class="btn btn-secondary">
+                    Отменить загрузку
+                </button>
+                <button id="sanitizer-btn-proceed" class="btn btn-warning">
+                    Оставить как есть
+                </button>
+                <button id="sanitizer-btn-replace" class="btn btn-primary">
+                    Заменить и продолжить
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

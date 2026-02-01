@@ -1,0 +1,20 @@
+# AWS Credentials Test File
+
+## Test 1: AWS Access Key and Secret Access Key
+AWS_ACCESS_KEY_ID=AKIAIOSFODNN7EXAMPLE
+AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
+
+## Test 2: AWS Session Token
+AWS_SESSION_TOKEN=FwoGZXIvYXdzEBYaDKj5pJhKlM3n2VhYRiK3ASvN7EqGHjkJhF9L8m+PqR3Vn4xZ5tYwQ2kL9M7jHfG8nB3vC6sK1dF2gE4hI5jK6lL7mM8nN9oO0pP1qQ2rR3sS4tT5uU6vV7wW8xX9yY0zZ1aA2bB3cC4dD5eE6fF7gG8hH9iI0jJ1kK2lL3mM4nN5oO6pP7qQ8rR9sS0tT1uU2vV3wW4xX5yY6
+
+## Test 3: JSON format
+{
+  "aws": {
+    "access_key_id": "AKIAIOSFODNN7EXAMPLE",
+    "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+    "region": "us-east-1"
+  }
+}
+
+## Test 4: Another secret key example
+secret_access_key: "A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0"

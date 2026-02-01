@@ -1,0 +1,20 @@
+# Database Connection Strings Test File
+
+## PostgreSQL
+DATABASE_URL=postgresql://dbuser:secretpassword123@localhost:5432/mydb
+PROD_DB=postgres://admin:P@ssw0rd!@db.example.com:5432/production
+
+## MySQL
+MYSQL_URL=mysql://root:mysqlpass@localhost:3306/testdb
+MYSQL_PROD=mysql://appuser:Compl3xP@ss@mysql.internal:3306/app_database
+
+## MongoDB
+MONGO_URI=mongodb://mongouser:mongo123@localhost:27017/myapp
+MONGO_ATLAS=mongodb+srv://admin:SecurePass456@cluster0.mongodb.net/production
+
+## Redis (with password)
+REDIS_URL=redis://:redispassword@localhost:6379
+
+## Complex examples with special characters
+DB_CONNECTION=postgresql://user%40company.com:p@ssw0rd%21@db-server.com:5432/app_db
+BACKUP_DB=mysql://backup_user:p4ssw0rd_with_numb3rs@10.0.0.5:3306/backups

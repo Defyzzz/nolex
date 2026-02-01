@@ -1,0 +1,31 @@
+# Slack & Discord Tokens Test File
+
+## Slack Bot Token
+SLACK_BOT_TOKEN=xoxb-1234567890123-1234567890123-AbCdEfGhIjKlMnOpQrStUvWx
+
+## Slack User Token
+SLACK_USER_TOKEN=xoxp-1234567890123-1234567890123-AbCdEfGhIjKlMnOpQrStUvWx
+
+## Slack Webhook URL
+SLACK_WEBHOOK=https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+
+## Discord Bot Token
+DISCORD_BOT_TOKEN=MTk4NjIyNDgzNDcxOTI1MjQ4.Ga5VmX.1a2b3c4d5e6f7g8h9i0j1k2l3m4n5o6p7q8r9s0t1u2v3w4x
+
+## Discord Webhook
+DISCORD_WEBHOOK=https://discord.com/api/webhooks/123456789012345678/AbCdEfGhIjKlMnOpQrStUvWxYz-1234567890AbCdEfGhIjKlMnOpQrStUvWx
+
+## Discordapp Webhook (alternative domain)
+DISCORD_WEBHOOK_2=https://discordapp.com/api/webhooks/987654321098765432/ZyXwVuTsRqPoNmLkJiHgFeDcBa-0987654321ZyXwVuTsRqPoNmLkJiHgFe
+
+## Multiple tokens in config
+{
+  "slack": {
+    "bot_token": "xoxb-9876543210987-9876543210987-XyZaBcDeFgHiJkLmNoPqRsTu",
+    "webhook": "https://hooks.slack.com/services/T12345678/B12345678/abcdefghijklmnopqrstuvwx"
+  },
+  "discord": {
+    "token": "NzI1ODA5MDQ2MDU1ODQyODE2.XxYyZz.AbCdEf1234567890GhIjKlMnOp-QrStUvWxYz",
+    "webhook": "https://discord.com/api/webhooks/725809046055842816/AbCdEf1234567890GhIjKlMnOpQrStUvWxYz"
+  }
+}

@@ -1,0 +1,26 @@
+# Stripe & Payment Services Test File
+
+## Stripe Secret Keys
+STRIPE_SECRET_KEY_LIVE=sk_live_51AbCdEfGhIjKlMnOpQrStUvWx1234567890
+STRIPE_SECRET_KEY_TEST=sk_test_51XyZaBcDeFgHiJkLmNoPqRsT9876543210
+
+## Stripe Restricted Keys
+STRIPE_RESTRICTED_KEY=rk_live_51AbCdEfGhIjKlMnOpQrStUvWx1234567890
+
+## Stripe Publishable Keys (less sensitive but still should be detected)
+# Note: публикуемые ключи менее критичны, но тоже не должны утекать
+# STRIPE_PUBLISHABLE_KEY=pk_live_51AbCdEfGhIjKlMnOpQrStUvWx1234567890
+
+## Configuration example
+{
+  "payment": {
+    "stripe": {
+      "secret_key": "sk_live_51StripeSecretKey1234567890AbCdEfGhIjKl",
+      "restricted_key": "rk_test_51RestrictedKey9876543210ZyXwVuTsRqPo"
+    }
+  }
+}
+
+## Environment variables
+STRIPE_API_KEY=sk_test_51TestKey1234567890AbCdEfGhIjKlMnOpQrStUvWxYz
+STRIPE_WEBHOOK_SECRET=whsec_1234567890abcdefghijklmnopqrstuvwxyz

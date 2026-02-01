@@ -1,0 +1,20 @@
+# Тестовый файл для новых паттернов детектирования
+# Создан: 2026-01-30
+
+# 1. Stripe Webhook Secret - ДОЛЖЕН детектироваться
+STRIPE_WEBHOOK_SECRET=whsec_1234567890abcdefghijklmnopqrstuvwxyz
+STRIPE_WEBHOOK_SECRET=whsec_test_abc123def456ghi789jklmno
+
+# 2. Redis Connection URL - ДОЛЖЕН детектироваться
+REDIS_URL=redis://:redispassword@localhost:6379
+REDIS_URL=redis://user:myP@ssw0rd123@redis.example.com:6379/0
+
+# 3. GitHub Personal Access Token (Fine-grained) - ДОЛЖЕН детектироваться
+GITHUB_TOKEN=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
+GITHUB_TOKEN=github_pat_11AAAAAA0000000000000_1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
+
+# Комбинированный тест - все три типа в одном файле
+echo "Testing all new patterns"
+export STRIPE_WEBHOOK_SECRET=whsec_prod_xyz789abc123def456ghi789jklmno
+export REDIS_URL=redis://:SuperSecretPassword@prod-cache.company.internal:6379
+export GH_TOKEN=github_pat_11EXAMPLE00000000000_ExampleTokenWith59CharactersOfRandomDataHereNowTesting

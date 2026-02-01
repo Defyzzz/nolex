@@ -1,0 +1,17 @@
+Привет! Вот мои данные для тестирования системы:
+
+1. API ключ OpenAI: sk-12345abcde12345abcde12345abcde12345
+2. API ключ Anthropic: sk-ant-api03-1234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqr
+3. API ключ Google: AIzaSyDaGmWKa4JsXZ-HjGw7ISLn_3namBGewQe
+4. AWS Access Key: AKIAIOSFODNN7EXAMPLE
+5. GitHub Token: ghp_1234567890abcdefghijklmnopqrstuvwxyz12
+6. Email: ivan.petrov@example.com
+7. Российский телефон: +7 (999) 123-45-67
+8. Номер карты: 4532 1488 0343 6467
+9. JWT токен: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+10. Приватный SSH ключ:
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAyq2lqQZJd8gHqKJB8bV7eCmGhfq8YGqPFXJVPmIqr+a7
+-----END RSA PRIVATE KEY-----
+
+Пожалуйста, не раскрывайте эти данные!
