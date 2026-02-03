@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Constructor - Nolex</title>
+    <link rel="stylesheet" href="constructor.css">
+</head>
+
+<body>
+    <div class="constructor-container">
+        <!-- Header -->
+        <header class="constructor-header">
+            <button id="back-btn" class="back-btn" title="Back to Popup">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <div class="header-title">
+                <img src="icons/icon48.png" alt="Nolex" class="header-logo">
+                <h1>Smart Constructor</h1>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="constructor-main">
+            <!-- Add Pattern Section -->
+            <section class="section add-section">
+                <div class="section-header">
+                    <h2>➕ Add New Pattern</h2>
+                </div>
+                <p class="section-description">
+                    Paste an example of your sensitive data. AI will generate a regex pattern automatically.
+                </p>
+
+                <div class="add-pattern-form">
+                    <!-- Step 1: Input Example -->
+                    <div class="form-group">
+                        <label for="example-input">Example String</label>
+                        <input type="text" id="example-input" class="input-field"
+                            placeholder="e.g., host=192.168.1.1 or api_key=sk-abc123...">
+                        <small class="input-hint">
+                            Paste real sensitive data. The AI will identify patterns automatically.
+                        </small>
+                    </div>
+
+                    <!-- Pattern Analysis (shows after input) -->
+                    <div id="pattern-analysis" class="pattern-analysis hidden">
+                        <h3>🔍 Detected Pattern Parts</h3>
+                        <div id="analysis-result" class="analysis-result">
+                            <!-- Populated by JS -->
+                        </div>
+                        <div id="analysis-warnings" class="analysis-warnings">
+                            <!-- Warnings shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Configuration -->
+                    <div id="pattern-config" class="pattern-config hidden">
+                        <h3>⚙️ Pattern Configuration</h3>
+
+                        <div class="form-group">
+                            <label for="pattern-name">Pattern Name</label>
+                            <input type="text" id="pattern-name" class="input-field"
+                                placeholder="e.g., Internal Database Host">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="replacement-text">Replacement Text</label>
+                            <input type="text" id="replacement-text" class="input-field"
+                                placeholder="e.g., ***DB_HOST_REDACTED***">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Match Mode</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="match-mode" value="pattern" checked>
+                                    <span>Pattern Match</span>
+                                    <small>Match similar values (recommended)</small>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="match-mode" value="strict">
+                                    <span>Strict Match</span>
+                                    <small>Match only this exact value</small>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="case-sensitive">
+                                <span>Case sensitive</span>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Generated Regex Pattern</label>
+                            <div class="regex-preview">
+                                <code id="generated-regex">...</code>
+                                <button id="edit-regex-btn" class="icon-btn" title="Edit regex manually">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <textarea id="regex-editor" class="regex-editor hidden"
+                                placeholder="Edit regex pattern..."></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Test Pattern -->
+                    <div id="pattern-test" class="pattern-test hidden">
+                        <h3>🧪 Test Your Pattern</h3>
+
+                        <div class="form-group">
+                            <label for="test-input">Test String</label>
+                            <input type="text" id="test-input" class="input-field"
+                                placeholder="Enter text to test if pattern matches...">
+                        </div>
+
+                        <div id="test-result" class="test-result">
+                            <!-- Test results shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div id="pattern-actions" class="pattern-actions hidden">
+                        <button id="clear-btn" class="btn btn-secondary">Clear</button>
+                        <button id="save-pattern-btn" class="btn btn-primary">
+                            Save Custom Pattern
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Custom Patterns Section -->
+            <section class="section custom-section">
+                <div class="section-header">
+                    <h2>✨ Custom Patterns</h2>
+                    <span class="pattern-count" id="custom-count">0</span>
+                </div>
+                <p class="section-description">
+                    Patterns you've created. Click to edit or delete.
+                </p>
+                <div id="custom-patterns" class="patterns-container">
+                    <div class="empty-state">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <path d="M12 8v4M12 16h.01"></path>
+                        </svg>
+                        <p>No custom patterns yet</p>
+                        <small>Create your first pattern above</small>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Built-in Patterns Section -->
+            <section class="section built-in-section">
+                <div class="section-header">
+                    <h2>📋 Built-in Patterns</h2>
+                    <span class="pattern-count" id="builtin-count">27</span>
+                </div>
+                <p class="section-description">
+                    These patterns are included by default and cannot be modified.
+                </p>
+                <div id="builtin-patterns" class="patterns-container">
+                    <!-- Dynamically populated by constructor.js -->
+                    <div class="loading">Loading patterns...</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="constructor-footer">
+            <p>Nolex Smart Constructor • AI-powered pattern detection</p>
+        </footer>
+
+        <!-- Custom Confirm Dialog -->
+        <div id="confirm-dialog" class="confirm-overlay hidden">
+            <div class="confirm-modal">
+                <p id="confirm-message">Are you sure?</p>
+                <div class="confirm-buttons">
+                    <button id="confirm-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="confirm-ok" class="btn btn-primary">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="detector.js"></script>
+    <script src="smart_generator.js"></script>
+    <script src="constructor.js"></script>
+</body>
+
+</html>

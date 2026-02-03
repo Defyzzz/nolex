@@ -96,6 +96,12 @@
 
             console.warn(`🛡️ ⚠️ В файле "${fileName}" найдено ${findings.length} потенциально чувствительных элементов!`, findings);
 
+            // Отправить статистику в background
+            window.postMessage({
+                type: 'NOLEX_FINDINGS',
+                findings: findings.map(f => ({ type: f.type, name: f.name }))
+            }, '*');
+
             const userDecision = await askUserPermission(fileName, fileContent, findings);
             console.log('🛡️ 👤 Решение пользователя:', userDecision.action);
 

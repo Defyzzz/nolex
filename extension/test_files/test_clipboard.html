@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nolex - Тестирование перехвата буфера обмена</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 16px;
+        }
+
+        .test-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .test-section h2 {
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .test-section h2::before {
+            content: '🧪';
+            font-size: 28px;
+        }
+
+        label {
+            display: block;
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .contenteditable {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            min-height: 120px;
+            background: white;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .contenteditable:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .test-data {
+            background: #f7fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .test-data h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .test-item {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            color: #2d3748;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+        }
+
+        .test-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        }
+
+        .test-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .instructions {
+            background: #edf2f7;
+            border-left: 4px solid #667eea;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .instructions p {
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛡️ Nolex - Тест перехвата буфера обмена</h1>
+            <p class="subtitle">Проверка защиты от утечки чувствительных данных при вставке</p>
+        </div>
+
+        <div class="test-section">
+            <h2>Тестовые данные для копирования</h2>
+            <div class="instructions">
+                <p><strong>Инструкция:</strong> Нажмите на любой блок ниже чтобы скопировать текст в буфер обмена, затем попробуйте вставить его в одно из полей ниже.</p>
+            </div>
+            <div class="test-data">
+                <h3>🔑 API ключи и токены</h3>
+                <div class="test-item" onclick="copyToClipboard(this.querySelector('code').textContent)">
+                    <strong>OpenAI API Key:</strong>
+                    <code>sk-proj_abcdefghijklmnopqrstuvwxyz1234567890</code>
+                </div>
+                <div class="test-item" onclick="copyToClipboard(this.querySelector('code').textContent)">
+                    <strong>GitHub Personal Access Token:</strong>
+                    <code>ghp_1234567890abcdefghijklmnopqrstuvwxyz</code>
+                </div>
+                <div class="test-item" onclick="copyToClipboard(this.querySelector('code').textContent)">
+                    <strong>AWS Access Key:</strong>
+                    <code>AKIAIOSFODNN7EXAMPLE</code>
+                </div>
+                <div class="test-item" onclick="copyToClipboard(this.querySelector('code').textContent)">
+                    <strong>Множественные секреты:</strong>
+                    <code>Мой OpenAI ключ: sk-proj_test123456789 и GitHub токен: ghp_abcdefghijklmnopqrstuvwxyz123456</code>
+                </div>
+            </div>
+
+            <div class="test-data">
+                <h3>✅ Безопасный текст</h3>
+                <div class="test-item" onclick="copyToClipboard(this.querySelector('code').textContent)">
+                    <strong>Обычный текст:</strong>
+                    <code>Это просто обычный текст без чувствительной информации</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>Поля для тестирования вставки</h2>
+            
+            <label>
+                Input (text) <span class="badge">Базовый</span>
+            </label>
+            <input type="text" placeholder="Вставьте сюда текст (Cmd+V или Ctrl+V)">
+
+            <label>
+                Textarea <span class="badge">Многострочный</span>
+            </label>
+            <textarea placeholder="Вставьте сюда текст (Cmd+V или Ctrl+V)"></textarea>
+
+            <label>
+                ContentEditable DIV <span class="badge">Расширенный</span>
+            </label>
+            <div class="contenteditable" contenteditable="true" data-placeholder="Вставьте сюда текст (Cmd+V или Ctrl+V)"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Ожидаемое поведение</h2>
+            <div class="instructions">
+                <p>✅ <strong>Обычный текст:</strong> Должен вставляться без предупреждений</p>
+                <p>⚠️ <strong>Чувствительные данные:</strong> Должно появиться диалоговое окно с вариантами:</p>
+                <p style="margin-left: 20px;">• <strong>Cancel</strong> - вставка отменяется</p>
+                <p style="margin-left: 20px;">• <strong>Proceed anyway</strong> - вставляется оригинальный текст</p>
+                <p style="margin-left: 20px;">• <strong>Replace & Proceed</strong> - вставляется очищенный текст</p>
+                <p>🔍 <strong>Проверьте консоль браузера</strong> (F12) для логов работы расширения</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('✅ Текст скопирован в буфер обмена');
+                // Показываем визуальную обратную связь
+                event.target.closest('.test-item').style.background = '#48bb78';
+                event.target.closest('.test-item').style.color = 'white';
+                setTimeout(() => {
+                    event.target.closest('.test-item').style.background = '';
+                    event.target.closest('.test-item').style.color = '';
+                }, 300);
+            }).catch(err => {
+                console.error('❌ Ошибка копирования:', err);
+            });
+        }
+    </script>
+</body>
+</html>

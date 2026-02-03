@@ -48,6 +48,17 @@
                             <h3>Detected Data:</h3>
                             <div id="sanitizer-findings-list" class="findings-list"></div>
                         </div>
+
+                        <div class="sanitizer-feedback">
+                            <h3>Report Issue or Send Feedback:</h3>
+                            <textarea 
+                                id="sanitizer-feedback-text" 
+                                class="feedback-textarea" 
+                                placeholder="If you notice any errors or have questions about the detected data, please describe them here..."
+                                rows="3"
+                            ></textarea>
+                            <p class="feedback-hint">Your feedback will be sent when you click one of the buttons below (optional)</p>
+                        </div>
                     </div>
 
                     <div class="sanitizer-footer">
@@ -209,6 +220,45 @@
                     display: flex;
                     flex-direction: column;
                     gap: 12px;
+                }
+
+                .sanitizer-feedback {
+                    margin-top: 24px;
+                    padding-top: 20px;
+                    border-top: 1px solid rgba(52, 152, 219, 0.2);
+                }
+
+                .feedback-textarea {
+                    width: 100%;
+                    padding: 12px;
+                    background: rgba(0, 0, 0, 0.4);
+                    border: 1px solid rgba(52, 152, 219, 0.3);
+                    border-radius: 8px;
+                    color: #ecf0f1;
+                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                    font-size: 14px;
+                    line-height: 1.6;
+                    resize: vertical;
+                    min-height: 80px;
+                    transition: all 0.2s ease;
+                    box-sizing: border-box;
+                }
+
+                .feedback-textarea:focus {
+                    outline: none;
+                    border-color: #5dade2;
+                    background: rgba(52, 152, 219, 0.15);
+                }
+
+                .feedback-textarea::placeholder {
+                    color: rgba(236, 240, 241, 0.5);
+                }
+
+                .feedback-hint {
+                    margin: 8px 0 0 0;
+                    font-size: 12px;
+                    color: rgba(236, 240, 241, 0.6);
+                    font-style: italic;
                 }
 
                 .finding-item {
@@ -465,19 +515,23 @@
             const btnReplace = this.currentDialog.querySelector('#sanitizer-btn-replace');
 
             btnCancel.addEventListener('click', () => {
-                this.close({ action: 'cancel' });
+                const feedback = this.collectFeedback();
+                this.close({ action: 'cancel', feedback });
             });
 
             btnProceed.addEventListener('click', () => {
-                this.close({ action: 'proceed' });
+                const feedback = this.collectFeedback();
+                this.close({ action: 'proceed', feedback });
             });
 
             btnReplace.addEventListener('click', () => {
                 const replacements = this.collectReplacements();
+                const feedback = this.collectFeedback();
                 this.close({
                     action: 'replace',
                     replacements: replacements,
-                    findings: findings
+                    findings: findings,
+                    feedback
                 });
             });
 
@@ -515,6 +569,30 @@
             });
 
             return replacements;
+        },
+
+        /**
+         * Собирает feedback от пользователя
+         */
+        collectFeedback() {
+            const feedbackTextarea = this.currentDialog.querySelector('#sanitizer-feedback-text');
+            if (!feedbackTextarea) {
+                return null;
+            }
+
+            const feedbackText = feedbackTextarea.value.trim();
+            if (!feedbackText) {
+                return null;
+            }
+
+            // Логируем feedback (для будущей интеграции с Supabase)
+            console.log('📝 Feedback от пользователя:', feedbackText);
+
+            return {
+                text: feedbackText,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
         },
 
         /**

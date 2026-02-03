@@ -161,6 +161,42 @@
             }
         },
 
+        // Custom patterns loaded from storage
+        customPatterns: {},
+
+        /**
+         * Set custom patterns (called from content script via event)
+         */
+        setCustomPatterns(patterns) {
+            this.customPatterns = patterns || {};
+            console.log(`🔧 Loaded ${Object.keys(this.customPatterns).length} custom patterns`);
+        },
+
+        /**
+         * Get all patterns (built-in + custom merged)
+         */
+        getAllPatterns() {
+            // Merge built-in and custom patterns
+            // Custom patterns take priority if there's a name collision
+            const allPatterns = { ...this.patterns };
+
+            for (const [id, customPattern] of Object.entries(this.customPatterns)) {
+                if (customPattern.enabled !== false) {
+                    try {
+                        allPatterns[id] = {
+                            regex: new RegExp(customPattern.regex, customPattern.flags),
+                            name: customPattern.name,
+                            replacement: customPattern.replacement
+                        };
+                    } catch (error) {
+                        console.error(`❌ Error creating regex for pattern ${id}:`, error);
+                    }
+                }
+            }
+
+            return allPatterns;
+        },
+
         /**
          * Анализирует текст и возвращает найденные чувствительные данные
          * @param {string} text - текст для анализа
@@ -170,7 +206,10 @@
             const findings = [];
             let findingId = 0;
 
-            for (const [type, pattern] of Object.entries(this.patterns)) {
+            // Use all patterns (built-in + custom)
+            const allPatterns = this.getAllPatterns();
+
+            for (const [type, pattern] of Object.entries(allPatterns)) {
                 const matches = text.matchAll(pattern.regex);
 
                 for (const match of matches) {
@@ -230,7 +269,10 @@
          * @returns {boolean} true если найдены чувствительные данные
          */
         hassSensitiveData(text) {
-            for (const pattern of Object.values(this.patterns)) {
+            // Check all patterns (built-in + custom)
+            const allPatterns = this.getAllPatterns();
+
+            for (const pattern of Object.values(allPatterns)) {
                 if (pattern.regex.test(text)) {
                     return true;
                 }
@@ -240,4 +282,15 @@
     };
 
     console.log('🔍 SensitiveDataDetector загружен');
+
+    // Listen for custom pattern injection from content script
+    window.addEventListener('sanitizer:setCustomPatterns', (event) => {
+        console.log('🎧 Detector: Получено событие sanitizer:setCustomPatterns');
+        if (event.detail && event.detail.customPatterns) {
+            console.log('📦 Detector: Данные паттернов:', Object.keys(event.detail.customPatterns));
+            window.SensitiveDataDetector.setCustomPatterns(event.detail.customPatterns);
+        } else {
+            console.warn('⚠️ Detector: Нет данных паттернов в событии');
+        }
+    });
 })();
