@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nolex - Data Privacy Layer for AI</title>
+    <meta name="description"
+        content="Local-first data sanitization proxy. Automate regex redaction for API keys, PII, and sensitive data before it reaches LLMs.">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Favicon would go here -->
+</head>
+
+<body>
+    <header class="header">
+        <div class="container nav">
+            <a href="#" class="logo">
+                <img src="assets/logo.png" alt="Nolex">
+                <span style="font-family: 'JetBrains Mono', monospace;">NOLEX</span>
+            </a>
+            <div class="nav-links"> <!-- Would be hidden on mobile via CSS typically -->
+                <a href="#features" class="btn btn-secondary" style="border:none">Features</a>
+                <a href="#docs" class="btn btn-secondary" style="border:none">Docs</a>
+                <a href="https://github.com/nolex" class="btn btn-secondary" style="border:none">GitHub</a>
+                <a href="#install" class="btn btn-primary">Add to Chrome</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. HERO: Product Value -->
+        <section class="hero">
+            <div class="container animate-in stagger-1">
+                <span class="text-label">v1.2.0 Stable Release</span>
+                <h1>Secure Data Layer for<br><span class="text-gradient">AI Workflows</span></h1>
+                <p>Client-side sanitization proxy. Automatically redact API keys, PII, and regex patterns from your
+                    prompts before they leave the browser.</p>
+
+                <div style="display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem;">
+                    <a href="#install" class="btn btn-primary">Get Extension</a>
+                    <a href="#docs" class="btn btn-secondary">Read Documentation</a>
+                </div>
+
+                <div class="hero-visual-container animate-in stagger-2">
+                    <div class="window-bar">
+                        <div class="dot" style="background:#ff5f56"></div>
+                        <div class="dot" style="background:#ffbd2e"></div>
+                        <div class="dot" style="background:#27c93f"></div>
+                        <span
+                            style="margin-left:auto; font-size:0.8rem; opacity:0.5; font-family:'JetBrains Mono'">proxy_logs.json</span>
+                    </div>
+                    <div class="terminal-content">
+                        <div class="code-line"><span style="color:#728CB2">// Input Prompt</span></div>
+                        <div class="code-line">Debug this config: AWS_KEY=<span
+                                style="color:#F2A572">AKIAIOSFODNN7EXAMPLE</span></div>
+                        <div class="code-line"><br></div>
+                        <div class="code-line"><span style="color:#728CB2">// Nolex Interceptor [Localhost]</span></div>
+                        <div class="code-line"><span style="color:#A5F272">✓ MATCH:</span> aws_key_pattern</div>
+                        <div class="code-line"><span style="color:#A5F272">✓ REDACT:</span> AWS_KEY={{REDACTED_AWS_KEY}}
+                        </div>
+                        <div class="code-line"><br></div>
+                        <div class="code-line"><span style="color:#728CB2">// Output to ChatGPT</span></div>
+                        <div class="code-line">Debug this config: AWS_KEY={{REDACTED_AWS_KEY}}</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. FEATURES: Bento Grid -->
+        <section class="container" id="features">
+            <h2 class="text-center" style="margin-bottom: 3rem; text-align:center;">Core Capabilities</h2>
+
+            <div class="bento-grid">
+                <!-- Card 1: Main Tech -->
+                <div class="bento-card col-span-12 animate-in stagger-1">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <span class="text-label">Architecture</span>
+                            <h3 class="card-title">Local-First Regex Engine</h3>
+                            <p class="card-desc">Zero-latency masking running entirely in the DOM. No data is ever sent
+                                to a remote sanitization server.</p>
+                        </div>
+                        <div
+                            style="background:var(--nolex-electric); padding:0.5rem; border-radius:4px; font-weight:bold; font-size:0.8rem;">
+                            AES-256</div>
+                    </div>
+                    <div class="feature-visual" style="border:1px solid var(--border); background:rgba(0,0,0,0.5);">
+                        <div style="display:flex; gap:2rem; justify-content:center; align-items:center;">
+                            <div style="text-align:center;">
+                                <div>Browser DOM</div>
+                                <div style="font-size:1.5rem">⬇</div>
+                                <div
+                                    style="border:1px dashed var(--nolex-electric); padding:0.5rem; color:var(--nolex-electric)">
+                                    NOLEX PROXY</div>
+                                <div style="font-size:1.5rem">⬇</div>
+                                <div>Network Req</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: Smart Constructor -->
+                <div class="bento-card col-span-6 animate-in stagger-2">
+                    <span class="text-label">Configuration</span>
+                    <h3 class="card-title">Smart Rule Constructor</h3>
+                    <p class="card-desc">Define custom masking rules for internal project IDs, tokens, or proprietary
+                        formats.</p>
+                    <div class="feature-visual">
+                        <span style="color:var(--syntax-keyword)">const</span> pattern = <span
+                            style="color:var(--syntax-string)">/PROJ-\d{4}/g</span>;
+                    </div>
+                </div>
+
+                <!-- Card 3: File Sanitization -->
+                <div class="bento-card col-span-6 animate-in stagger-3">
+                    <span class="text-label">Files</span>
+                    <h3 class="card-title">Document Scrubbing</h3>
+                    <p class="card-desc">Drag-and-drop text/code files to sanitize them before upload.</p>
+                    <div class="feature-visual">
+                        [📄 secret.env] → <span style="color:var(--syntax-string)">Using "env_redaction"</span> → [📄
+                        clean.env]
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. TRUST: Specs -->
+        <section class="container" style="padding-bottom: 8rem;">
+            <div class="bento-card col-span-12" style="background:transparent; border:none;">
+                <h3 class="card-title">Technical Specifications</h3>
+                <table class="specs-table">
+                    <tr>
+                        <td class="spec-key">Encryption Standard</td>
+                        <td class="spec-val">Local AES-256</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-key">Permissions</td>
+                        <td class="spec-val">activeTab, storage (Local)</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-key">Performance Impact</td>
+                        <td class="spec-val">&lt; 5ms latency</td>
+                    </tr>
+                    <tr>
+                        <td class="spec-key">Telemetry</td>
+                        <td class="spec-val">None / Opt-in</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <!-- 4. FOOTER -->
+        <footer class="footer">
+            <div class="container footer-grid">
+                <div class="footer-col">
+                    <a href="#" class="logo" style="margin-bottom:1rem">
+                        <img src="assets/logo.png" alt="Nolex">
+                        <span style="font-family: 'JetBrains Mono', monospace;">NOLEX</span>
+                    </a>
+                    <p style="color:var(--text-secondary); font-size:0.9rem;">
+                        Secure AI adoption layer.<br>
+                        MIT License.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <a href="#">Changelog</a>
+                    <a href="#">Documentation</a>
+                    <a href="#">Manifest V3</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Security</a>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <a href="#">GitHub</a>
+                    <a href="#">Discord</a>
+                    <a href="#">Twitter</a>
+                </div>
+            </div>
+        </footer>
+    </main>
+    <script src="script.js"></script>
+</body>
+
+</html>

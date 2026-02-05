@@ -15,74 +15,143 @@
         },
 
         /**
-         * Создает и показывает диалоговое окно программно
+         * Создает и показывает диалоговое окно программно (DOM-based construction)
          */
         createDialog(fileName, fileContent, findings) {
+            // Внедряем стили
+            this.injectStyles();
+
             // Создаем overlay
             const overlay = document.createElement('div');
             overlay.id = 'sanitizer-dialog-overlay';
             overlay.className = 'sanitizer-overlay';
 
-            // Внедряем стили
-            this.injectStyles();
+            // --- Sanitizer Dialog Container ---
+            const dialog = document.createElement('div');
+            dialog.className = 'sanitizer-dialog';
 
-            // Создаем структуру диалога
-            overlay.innerHTML = `
-                <div class="sanitizer-dialog">
-                    <div class="sanitizer-header">
-                        <div class="sanitizer-icon">⚠️</div>
-                        <h2>Sensitive Data Detected</h2>
-                    </div>
-                    
-                    <div class="sanitizer-content">
-                        <p class="sanitizer-warning">
-                            The file <strong id="sanitizer-filename">${this.escapeHtml(fileName)}</strong> contains potentially sensitive information.
-                        </p>
+            // --- Header ---
+            const header = document.createElement('div');
+            header.className = 'sanitizer-header';
 
-                        <div class="sanitizer-preview">
-                            <h3>Preview:</h3>
-                            <div id="sanitizer-text-preview" class="text-preview">${this.highlightSensitiveData(fileContent, findings)}</div>
-                        </div>
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'sanitizer-icon';
+            iconDiv.textContent = '⚠️';
 
-                        <div class="sanitizer-findings">
-                            <h3>Detected Data:</h3>
-                            <div id="sanitizer-findings-list" class="findings-list"></div>
-                        </div>
+            const title = document.createElement('h2');
+            title.textContent = 'Sensitive Data Detected';
 
-                        <div class="sanitizer-feedback">
-                            <h3>Report Issue or Send Feedback:</h3>
-                            <textarea 
-                                id="sanitizer-feedback-text" 
-                                class="feedback-textarea" 
-                                placeholder="If you notice any errors or have questions about the detected data, please describe them here..."
-                                rows="3"
-                            ></textarea>
-                            <p class="feedback-hint">Your feedback will be sent when you click one of the buttons below (optional)</p>
-                        </div>
-                    </div>
+            header.appendChild(iconDiv);
+            header.appendChild(title);
+            dialog.appendChild(header);
 
-                    <div class="sanitizer-footer">
-                        <button id="sanitizer-btn-cancel" class="btn btn-secondary">
-                            Cancel Upload
-                        </button>
-                        <button id="sanitizer-btn-proceed" class="btn btn-warning">
-                            Keep As Is
-                        </button>
-                        <button id="sanitizer-btn-replace" class="btn btn-primary">
-                            Apply & Continue
-                        </button>
-                    </div>
-                </div>
-            `;
+            // --- Content ---
+            const content = document.createElement('div');
+            content.className = 'sanitizer-content';
 
-            // Добавляем в DOM
+            // Warning
+            const warningP = document.createElement('p');
+            warningP.className = 'sanitizer-warning';
+
+            const warningTextStart = document.createTextNode('The file ');
+            const fileNameStrong = document.createElement('strong');
+            fileNameStrong.id = 'sanitizer-filename';
+            fileNameStrong.textContent = fileName;
+            const warningTextEnd = document.createTextNode(' contains potentially sensitive information.');
+
+            warningP.appendChild(warningTextStart);
+            warningP.appendChild(fileNameStrong);
+            warningP.appendChild(warningTextEnd);
+            content.appendChild(warningP);
+
+            // Preview
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'sanitizer-preview';
+
+            const previewTitle = document.createElement('h3');
+            previewTitle.textContent = 'Preview:';
+            previewDiv.appendChild(previewTitle);
+
+            const textPreview = document.createElement('div');
+            textPreview.id = 'sanitizer-text-preview';
+            textPreview.className = 'text-preview';
+            // Use highlightSensitiveDataDOM to append nodes directly instead of innerHTML
+            this.highlightSensitiveDataDOM(textPreview, fileContent, findings);
+            previewDiv.appendChild(textPreview);
+
+            content.appendChild(previewDiv);
+
+            // Findings List
+            const findingsDiv = document.createElement('div');
+            findingsDiv.className = 'sanitizer-findings';
+
+            const findingsTitle = document.createElement('h3');
+            findingsTitle.textContent = 'Detected Data:';
+            findingsDiv.appendChild(findingsTitle);
+
+            const findingsList = document.createElement('div');
+            findingsList.id = 'sanitizer-findings-list';
+            findingsList.className = 'findings-list';
+            findingsDiv.appendChild(findingsList);
+
+            content.appendChild(findingsDiv);
+
+            // Feedback
+            const feedbackDiv = document.createElement('div');
+            feedbackDiv.className = 'sanitizer-feedback';
+
+            const feedbackTitle = document.createElement('h3');
+            feedbackTitle.textContent = 'Report Issue or Send Feedback:';
+            feedbackDiv.appendChild(feedbackTitle);
+
+            const feedbackTextarea = document.createElement('textarea');
+            feedbackTextarea.id = 'sanitizer-feedback-text';
+            feedbackTextarea.className = 'feedback-textarea';
+            feedbackTextarea.placeholder = 'If you notice any errors or have questions about the detected data, please describe them here...';
+            feedbackTextarea.rows = 3;
+            feedbackDiv.appendChild(feedbackTextarea);
+
+            const feedbackHint = document.createElement('p');
+            feedbackHint.className = 'feedback-hint';
+            feedbackHint.textContent = 'Your feedback will be sent when you click one of the buttons below (optional)';
+            feedbackDiv.appendChild(feedbackHint);
+
+            content.appendChild(feedbackDiv);
+            dialog.appendChild(content);
+
+            // --- Footer ---
+            const footer = document.createElement('div');
+            footer.className = 'sanitizer-footer';
+
+            const btnCancel = document.createElement('button');
+            btnCancel.id = 'sanitizer-btn-cancel';
+            btnCancel.className = 'btn btn-secondary';
+            btnCancel.textContent = 'Cancel Upload';
+
+            const btnProceed = document.createElement('button');
+            btnProceed.id = 'sanitizer-btn-proceed';
+            btnProceed.className = 'btn btn-warning';
+            btnProceed.textContent = 'Keep As Is';
+
+            const btnReplace = document.createElement('button');
+            btnReplace.id = 'sanitizer-btn-replace';
+            btnReplace.className = 'btn btn-primary';
+            btnReplace.textContent = 'Apply & Continue';
+
+            footer.appendChild(btnCancel);
+            footer.appendChild(btnProceed);
+            footer.appendChild(btnReplace);
+            dialog.appendChild(footer);
+
+            // Assemble
+            overlay.appendChild(dialog);
             document.body.appendChild(overlay);
             this.currentDialog = overlay;
 
-            // Заполняем список findings
+            // Populate findings using DOM methods
             this.populateFindings(findings);
 
-            // Устанавливаем обработчики
+            // Setup listeners
             this.setupEventListeners(findings);
         },
 
@@ -95,18 +164,22 @@
             const style = document.createElement('style');
             style.id = 'sanitizer-styles';
             style.textContent = `
+                /* Nolex Theme v2 (Hybrid: Old Colors + New Tech Style) */
+                @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
                 .sanitizer-overlay {
                     position: fixed;
                     top: 0;
                     left: 0;
                     width: 100%;
                     height: 100%;
-                    background: rgba(0, 0, 0, 0.85);
+                    background: rgba(0, 0, 0, 0.85); /* Restored original overlay opacity */
+                    backdrop-filter: blur(8px);
                     display: flex;
                     justify-content: center;
                     align-items: center;
-                    z-index: 999999;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                    z-index: 2147483647;
+                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
                     animation: fadeIn 0.3s ease-in-out;
                 }
 
@@ -116,17 +189,20 @@
                 }
 
                 .sanitizer-dialog {
-                    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                    background: linear-gradient(135deg, rgba(26, 26, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%); /* Adjusted old purple for glass */
+                    backdrop-filter: blur(20px);
+                    -webkit-backdrop-filter: blur(20px);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
                     border-radius: 16px;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
                     max-width: 800px;
                     width: 90%;
                     max-height: 90vh;
                     overflow: hidden;
                     display: flex;
                     flex-direction: column;
-                    animation: slideUp 0.4s ease-out;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                    color: #FFFFFF;
                 }
 
                 @keyframes slideUp {
@@ -135,19 +211,20 @@
                 }
 
                 .sanitizer-header {
-                    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                    background: linear-gradient(135deg, rgba(231, 76, 60, 0.9) 0%, rgba(192, 57, 43, 0.9) 100%); /* Restored Red Header with slight opacity */
                     padding: 24px 32px;
                     display: flex;
                     align-items: center;
                     gap: 16px;
-                    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                 }
 
                 .sanitizer-icon {
-                    font-size: 32px;
+                    font-size: 28px;
+                    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
                     animation: pulse 2s ease-in-out infinite;
                 }
-
+                
                 @keyframes pulse {
                     0%, 100% { transform: scale(1); }
                     50% { transform: scale(1.1); }
@@ -155,45 +232,50 @@
 
                 .sanitizer-header h2 {
                     margin: 0;
-                    color: #fff;
-                    font-size: 24px;
+                    color: #FFFFFF;
+                    font-size: 20px;
                     font-weight: 600;
+                    letter-spacing: -0.01em;
                 }
 
                 .sanitizer-content {
-                    padding: 24px 32px;
+                    padding: 32px;
                     overflow-y: auto;
                     flex: 1;
                     color: #ecf0f1;
                 }
 
                 .sanitizer-warning {
-                    margin: 0 0 20px 0;
-                    padding: 16px;
-                    background: rgba(52, 152, 219, 0.1);
-                    border-left: 4px solid #3498db;
-                    border-radius: 8px;
+                    margin: 0 0 24px 0;
+                    padding: 16px 0;
                     font-size: 15px;
                     line-height: 1.6;
+                    color: #ecf0f1;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
                 }
 
                 .sanitizer-warning strong {
-                    color: #5dade2;
+                    color: #FFFFFF;
+                    font-weight: 600;
                 }
 
                 .sanitizer-preview h3,
-                .sanitizer-findings h3 {
+                .sanitizer-findings h3,
+                .sanitizer-feedback h3 {
                     margin: 0 0 12px 0;
-                    font-size: 16px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 12px;
                     font-weight: 600;
-                    color: #5dade2;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #3498db; /* Restored Light Blue */
                 }
 
                 .text-preview {
                     background: rgba(0, 0, 0, 0.3);
                     padding: 16px;
                     border-radius: 8px;
-                    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                    font-family: 'JetBrains Mono', monospace; /* Keep new font */
                     font-size: 13px;
                     line-height: 1.6;
                     white-space: pre-wrap;
@@ -201,14 +283,15 @@
                     max-height: 200px;
                     overflow-y: auto;
                     border: 1px solid rgba(52, 152, 219, 0.2);
+                    color: #ecf0f1;
                 }
 
                 .sanitizer-highlight {
-                    background: rgba(231, 76, 60, 0.3);
+                    background: rgba(231, 76, 60, 0.3); /* Restored Red Highlight */
                     padding: 2px 4px;
                     border-radius: 3px;
                     border: 1px solid #e74c3c;
-                    color: #fff;
+                    color: #ffffff;
                     font-weight: 600;
                 }
 
@@ -225,7 +308,7 @@
                 .sanitizer-feedback {
                     margin-top: 24px;
                     padding-top: 20px;
-                    border-top: 1px solid rgba(52, 152, 219, 0.2);
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
                 }
 
                 .feedback-textarea {
@@ -234,8 +317,8 @@
                     background: rgba(0, 0, 0, 0.4);
                     border: 1px solid rgba(52, 152, 219, 0.3);
                     border-radius: 8px;
-                    color: #ecf0f1;
-                    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+                    color: #FFFFFF;
+                    font-family: 'Inter', system-ui, sans-serif;
                     font-size: 14px;
                     line-height: 1.6;
                     resize: vertical;
@@ -246,8 +329,8 @@
 
                 .feedback-textarea:focus {
                     outline: none;
-                    border-color: #5dade2;
-                    background: rgba(52, 152, 219, 0.15);
+                    border-color: #3498db;
+                    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
                 }
 
                 .feedback-textarea::placeholder {
@@ -258,14 +341,13 @@
                     margin: 8px 0 0 0;
                     font-size: 12px;
                     color: rgba(236, 240, 241, 0.6);
-                    font-style: italic;
                 }
 
                 .finding-item {
                     background: rgba(0, 0, 0, 0.3);
                     padding: 16px;
                     border-radius: 8px;
-                    border: 1px solid rgba(52, 152, 219, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.1);
                     transition: all 0.2s ease;
                     display: flex;
                     align-items: flex-start;
@@ -273,8 +355,8 @@
                 }
 
                 .finding-item:hover {
-                    border-color: #5dade2;
-                    background: rgba(52, 152, 219, 0.15);
+                    border-color: #3498db;
+                    background: rgba(52, 152, 219, 0.1);
                 }
 
                 .finding-item.disabled {
@@ -304,13 +386,14 @@
 
                 .finding-type {
                     font-weight: 600;
-                    color: #ffffff;
-                    font-size: 14px;
+                    color: #FFFFFF;
+                    font-size: 13px;
+                    font-family: 'JetBrains Mono', monospace;
                 }
 
                 .finding-value {
-                    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-                    color: #95a5a6;
+                    font-family: 'JetBrains Mono', monospace;
+                    color: #95a5a6; /* Restored Gray Value Text */
                     font-size: 12px;
                     background: rgba(0, 0, 0, 0.3);
                     padding: 4px 8px;
@@ -328,18 +411,19 @@
                 .finding-replacement label {
                     display: block;
                     margin-bottom: 6px;
-                    font-size: 13px;
-                    color: #d6eaf8;
+                    font-size: 12px;
+                    color: #bdc3c7;
+                    font-family: 'Inter', sans-serif;
                 }
 
                 .finding-replacement input {
                     width: 100%;
                     padding: 10px 12px;
                     background: rgba(0, 0, 0, 0.4);
-                    border: 1px solid rgba(52, 152, 219, 0.3);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
                     border-radius: 6px;
-                    color: #ecf0f1;
-                    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+                    color: #FFFFFF;
+                    font-family: 'JetBrains Mono', monospace; /* Keep new font */
                     font-size: 13px;
                     transition: all 0.2s ease;
                     box-sizing: border-box;
@@ -347,23 +431,23 @@
 
                 .finding-replacement input:focus {
                     outline: none;
-                    border-color: #5dade2;
-                    background: rgba(52, 152, 219, 0.15);
+                    border-color: #3498db;
+                    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
                 }
 
                 .sanitizer-footer {
-                    padding: 20px 32px;
+                    padding: 24px 32px;
                     background: rgba(0, 0, 0, 0.3);
-                    border-top: 1px solid rgba(52, 152, 219, 0.2);
+                    border-top: 1px solid rgba(255, 255, 255, 0.1);
                     display: flex;
                     justify-content: flex-end;
                     gap: 12px;
                 }
 
                 .btn {
-                    padding: 12px 24px;
-                    border: none;
-                    border-radius: 8px;
+                    padding: 10px 20px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 6px;
                     font-size: 14px;
                     font-weight: 600;
                     cursor: pointer;
@@ -371,59 +455,43 @@
                     display: flex;
                     align-items: center;
                     gap: 8px;
+                    font-family: 'Inter', sans-serif;
+                    background: #1a1a2e; /* Dark Purple matches window */
+                    color: #FFFFFF;
+                    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
                 }
 
                 .btn:hover {
-                    transform: translateY(-2px);
-                    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+                    background: #7f8c8d; /* Gray on hover */
+                    border-color: #95a5a6;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
                 }
 
                 .btn:active {
                     transform: translateY(0);
                 }
 
-                .btn-primary {
-                    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
-                    color: white;
-                }
-
-                .btn-primary:hover {
-                    background: linear-gradient(135deg, #5dade2 0%, #3498db 100%);
-                }
-
-                .btn-secondary {
-                    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-                    color: white;
-                }
-
-                .btn-secondary:hover {
-                    background: linear-gradient(135deg, #7f8c8d 0%, #6c7a7b 100%);
-                }
-
-                .btn-warning {
-                    background: linear-gradient(135deg, #1f618d 0%, #154360 100%);
-                    color: white;
-                }
-
-                .btn-warning:hover {
-                    background: linear-gradient(135deg, #2874a6 0%, #1f618d 100%);
+                /* Override specific button classes to share the base style */
+                .btn-primary, .btn-secondary, .btn-warning {
+                    background: #1a1a2e;
+                    color: #FFFFFF;
                 }
 
                 .sanitizer-content::-webkit-scrollbar,
                 .text-preview::-webkit-scrollbar {
-                    width: 8px;
+                    width: 6px;
                 }
 
                 .sanitizer-content::-webkit-scrollbar-track,
                 .text-preview::-webkit-scrollbar-track {
                     background: rgba(0, 0, 0, 0.2);
-                    border-radius: 4px;
                 }
 
                 .sanitizer-content::-webkit-scrollbar-thumb,
                 .text-preview::-webkit-scrollbar-thumb {
                     background: rgba(255, 255, 255, 0.2);
-                    border-radius: 4px;
+                    border-radius: 3px;
                 }
 
                 .sanitizer-content::-webkit-scrollbar-thumb:hover,
@@ -435,11 +503,11 @@
         },
 
         /**
-         * Заполняет список findings
+         * Заполняет список findings (DOM-based)
          */
         populateFindings(findings) {
             const findingsList = this.currentDialog.querySelector('#sanitizer-findings-list');
-            findingsList.innerHTML = '';
+            findingsList.textContent = ''; // Clear using textContent is safe
 
             findings.forEach(finding => {
                 const item = this.createFindingItem(finding);
@@ -448,55 +516,93 @@
         },
 
         /**
-         * Подсвечивает чувствительные данные в тексте
+         * Подсвечивает чувствительные данные в тексте using DOM nodes
          */
-        highlightSensitiveData(text, findings) {
-            let result = this.escapeHtml(text);
-
-            // Сортируем findings по индексу в обратном порядке
-            const sortedFindings = [...findings].sort((a, b) => b.index - a.index);
+        highlightSensitiveDataDOM(container, text, findings) {
+            let lastIndex = 0;
+            // Sort findings by index ascending to process sequentially
+            const sortedFindings = [...findings].sort((a, b) => a.index - b.index);
 
             sortedFindings.forEach(finding => {
-                const escapedValue = this.escapeHtml(finding.value);
-                const before = result.substring(0, finding.index);
-                const after = result.substring(finding.index + escapedValue.length);
+                // Text before finding
+                if (finding.index > lastIndex) {
+                    const textBefore = text.substring(lastIndex, finding.index);
+                    container.appendChild(document.createTextNode(textBefore));
+                }
 
-                result = before + `<span class="sanitizer-highlight">${escapedValue}</span>` + after;
+                // The sensitive part (highlighted)
+                const span = document.createElement('span');
+                span.className = 'sanitizer-highlight';
+                span.textContent = finding.value;
+                container.appendChild(span);
+
+                lastIndex = finding.index + finding.value.length;
             });
 
-            return result;
+            // Remaining text after last finding
+            if (lastIndex < text.length) {
+                const textAfter = text.substring(lastIndex);
+                container.appendChild(document.createTextNode(textAfter));
+            }
         },
 
         /**
-         * Создает элемент для одного finding
+         * Создает элемент для одного finding (DOM-based)
          */
         createFindingItem(finding) {
             const item = document.createElement('div');
             item.className = 'finding-item';
             item.dataset.findingId = finding.id;
 
-            item.innerHTML = `
-                <input type="checkbox" class="replace-checkbox" checked data-finding-id="${finding.id}">
-                <div class="finding-content">
-                    <div class="finding-header">
-                        <div class="finding-type">${this.escapeHtml(finding.name)}</div>
-                        <div class="finding-value" title="${this.escapeHtml(finding.value)}">${this.escapeHtml(finding.value)}</div>
-                    </div>
-                    <div class="finding-replacement">
-                        <label>Replace with:</label>
-                        <input type="text" 
-                               class="replacement-input" 
-                               data-finding-id="${finding.id}"
-                               value="${this.escapeHtml(finding.replacement)}"
-                               placeholder="Enter replacement...">
-                    </div>
-                </div>
-            `;
+            // Checkbox
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'replace-checkbox';
+            checkbox.checked = true;
+            checkbox.dataset.findingId = finding.id;
+            item.appendChild(checkbox);
+
+            // Item content container
+            const content = document.createElement('div');
+            content.className = 'finding-content';
+
+            // Header (Type + Value)
+            const header = document.createElement('div');
+            header.className = 'finding-header';
+
+            const typeDiv = document.createElement('div');
+            typeDiv.className = 'finding-type';
+            typeDiv.textContent = finding.name;
+            header.appendChild(typeDiv);
+
+            const valueDiv = document.createElement('div');
+            valueDiv.className = 'finding-value';
+            valueDiv.title = finding.value;
+            valueDiv.textContent = finding.value;
+            header.appendChild(valueDiv);
+
+            content.appendChild(header);
+
+            // Replacement input
+            const replacementDiv = document.createElement('div');
+            replacementDiv.className = 'finding-replacement';
+
+            const label = document.createElement('label');
+            label.textContent = 'Replace with:';
+            replacementDiv.appendChild(label);
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'replacement-input';
+            input.dataset.findingId = finding.id;
+            input.value = finding.replacement || '';
+            input.placeholder = 'Enter replacement...';
+            replacementDiv.appendChild(input);
+
+            content.appendChild(replacementDiv);
+            item.appendChild(content);
 
             // Add checkbox event listener
-            const checkbox = item.querySelector('.replace-checkbox');
-            const input = item.querySelector('.replacement-input');
-
             checkbox.addEventListener('change', (e) => {
                 const isChecked = e.target.checked;
                 input.disabled = !isChecked;
@@ -585,7 +691,7 @@
                 return null;
             }
 
-            // Логируем feedback (для будущей интеграции с Supabase)
+            // Логируем feedback
             console.log('📝 Feedback от пользователя:', feedbackText);
 
             return {
@@ -616,7 +722,7 @@
         },
 
         /**
-         * Экранирует HTML
+         * Экранирует HTML (NOT NEEDED ANYMORE if using DOM methods, but kept for utility if needed)
          */
         escapeHtml(text) {
             const div = document.createElement('div');

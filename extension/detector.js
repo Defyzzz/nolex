@@ -203,6 +203,14 @@
          * @returns {Array} массив объектов с информацией о найденных данных
          */
         analyze(text) {
+            // DEBUG: Log strict details about the text to detect invisible chars
+            if (text.length < 100) {
+                const hex = Array.from(text).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join(' ');
+                console.log(`🔍 DEBUG Text Analysis [${text.length}]: "${text}" (Hex: ${hex})`);
+            } else {
+                console.log(`🔍 DEBUG Text Analysis [${text.length} chars]`);
+            }
+
             const findings = [];
             let findingId = 0;
 
@@ -210,6 +218,9 @@
             const allPatterns = this.getAllPatterns();
 
             for (const [type, pattern] of Object.entries(allPatterns)) {
+                // IMPORTANT: Reset lastIndex before using matchAll if the regex is shared
+                pattern.regex.lastIndex = 0;
+
                 const matches = text.matchAll(pattern.regex);
 
                 for (const match of matches) {
@@ -273,7 +284,10 @@
             const allPatterns = this.getAllPatterns();
 
             for (const pattern of Object.values(allPatterns)) {
+                // IMPORTANT: Reset lastIndex to ensure consistent results
+                pattern.regex.lastIndex = 0;
                 if (pattern.regex.test(text)) {
+                    pattern.regex.lastIndex = 0; // Reset again just to be safe
                     return true;
                 }
             }
