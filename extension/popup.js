@@ -27,6 +27,11 @@ const DATA_TYPES_INFO = {
     'phone_ru': { icon: '📱', label: 'Phone Number (RU)' },
     'phone_international': { icon: '📞', label: 'Phone Number' },
     'credit_card': { icon: '💳', label: 'Credit Card' },
+    'deepseek_key': { icon: '🔑', label: 'DeepSeek API Key' },
+    'huggingface_token': { icon: '🤗', label: 'Hugging Face Token' },
+    'mistral_key': { icon: '🔑', label: 'Mistral API Key' },
+    'replicate_token': { icon: '🔑', label: 'Replicate Token' },
+    'cohere_key': { icon: '🔑', label: 'Cohere API Key' },
     'jwt_token': { icon: '🎫', label: 'JWT Token' },
     'private_key': { icon: '🔐', label: 'Private Key' }
 };
@@ -269,20 +274,14 @@ function handleMenuItemClick(e) {
     // Обработка различных действий
     switch (action) {
         case 'personal-account':
-            // TODO: Открыть страницу личного кабинета
-            alert('Personal Account - Coming soon!');
-            break;
         case 'about-us':
-            // TODO: Открыть страницу "О нас"
-            chrome.tabs.create({ url: 'https://github.com/Defyzzz/nolex' });
+            // Coming soon — no action
             break;
         case 'data-constructor':
-            // Open Smart Constructor page
             chrome.tabs.create({ url: 'constructor.html' });
             break;
         case 'support':
-            // TODO: Открыть страницу поддержки
-            chrome.tabs.create({ url: 'https://github.com/Defyzzz/nolex/issues' });
+            chrome.tabs.create({ url: 'mailto:support@nolex.zendesk.com?subject=Nolex Support Request' });
             break;
     }
 }

@@ -391,6 +391,32 @@ input:checked + .toggle-slider:before {
     transform: translateX(4px);
 }
 
+/* Coming Soon badge & disabled menu items */
+.menu-item-disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.menu-item-disabled:hover {
+    transform: none;
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--border-color);
+}
+
+.badge-coming-soon {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--warning);
+    background: rgba(237, 137, 54, 0.15);
+    border: 1px solid rgba(237, 137, 54, 0.3);
+    padding: 2px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
 .menu-footer {
     margin-top: 40px;
     padding-top: 20px;

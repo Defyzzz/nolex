@@ -108,8 +108,43 @@
                             </label>
                         </div>
 
-                        <div class="form-group">
-                            <label>Generated Regex Pattern</label>
+                        <div class="form-group regex-group">
+                            <div class="label-with-info">
+                                <label>Generated Regex Pattern</label>
+                                <button id="regex-info-btn" class="regex-info-btn" type="button" title="Regex cheat sheet">
+                                    <span>i</span>
+                                </button>
+                            </div>
+                            <div id="regex-cheatsheet" class="regex-cheatsheet hidden">
+                                <div class="cheatsheet-content">
+                                    <div class="cheatsheet-title">Regex Cheat Sheet</div>
+                                    <div class="cheatsheet-grid">
+                                        <div class="cs-row"><code>.</code><span>Any character</span></div>
+                                        <div class="cs-row"><code>\d</code><span>Digit (0-9)</span></div>
+                                        <div class="cs-row"><code>\w</code><span>Letter, digit or _</span></div>
+                                        <div class="cs-row"><code>\s</code><span>Whitespace</span></div>
+                                        <div class="cs-row"><code>[abc]</code><span>a, b, or c</span></div>
+                                        <div class="cs-row"><code>[^abc]</code><span>Not a, b, or c</span></div>
+                                        <div class="cs-row"><code>[a-z]</code><span>Range a to z</span></div>
+                                        <div class="cs-row"><code>*</code><span>0 or more</span></div>
+                                        <div class="cs-row"><code>+</code><span>1 or more</span></div>
+                                        <div class="cs-row"><code>?</code><span>0 or 1 (optional)</span></div>
+                                        <div class="cs-row"><code>{3}</code><span>Exactly 3 times</span></div>
+                                        <div class="cs-row"><code>{2,5}</code><span>2 to 5 times</span></div>
+                                        <div class="cs-row"><code>^</code><span>Start of string</span></div>
+                                        <div class="cs-row"><code>$</code><span>End of string</span></div>
+                                        <div class="cs-row"><code>(a|b)</code><span>a or b</span></div>
+                                        <div class="cs-row"><code>(...)</code><span>Capture group</span></div>
+                                        <div class="cs-row"><code>\.</code><span>Literal dot</span></div>
+                                        <div class="cs-row"><code>\\</code><span>Escape special char</span></div>
+                                    </div>
+                                    <div class="cheatsheet-example">
+                                        <span class="cs-label">Example:</span>
+                                        <code>\d{3}-\d{2}-\d{4}</code>
+                                        <span class="cs-desc">matches 123-45-6789</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="regex-preview">
                                 <code id="generated-regex">...</code>
                                 <button id="edit-regex-btn" class="icon-btn" title="Edit regex manually">

@@ -84,6 +84,26 @@ function setupEventListeners() {
         }
     });
 
+    // Regex info button (cheatsheet toggle)
+    const regexInfoBtn = document.getElementById('regex-info-btn');
+    const regexCheatsheet = document.getElementById('regex-cheatsheet');
+
+    regexInfoBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !regexCheatsheet.classList.contains('hidden');
+        regexCheatsheet.classList.toggle('hidden');
+        regexInfoBtn.classList.toggle('active', !isOpen);
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!regexCheatsheet.classList.contains('hidden') &&
+            !regexCheatsheet.contains(e.target) &&
+            e.target !== regexInfoBtn) {
+            regexCheatsheet.classList.add('hidden');
+            regexInfoBtn.classList.remove('active');
+        }
+    });
+
     // Edit regex button
     editRegexBtn.addEventListener('click', toggleRegexEditor);
 
@@ -269,8 +289,7 @@ async function exportGroup(groupId) {
             name: p.name,
             regex: p.regex,
             flags: p.flags,
-            replacement: p.replacement,
-            example: p.example
+            replacement: p.replacement
         }))
     };
 
@@ -318,7 +337,6 @@ async function handleImportFile(event) {
                 regex: p.regex,
                 flags: p.flags || 'gi',
                 replacement: p.replacement || '***REDACTED***',
-                example: p.example || '',
                 created: new Date().toISOString(),
                 enabled: true
             };
@@ -536,9 +554,6 @@ function renderCustomPatternGroups() {
                                     </div>
                                 </div>
                                 <div class="pattern-detail">
-                                    Example: <code>${escapeHtml(p.example)}</code>
-                                </div>
-                                <div class="pattern-detail">
                                     Replacement: <code>${escapeHtml(p.replacement)}</code>
                                 </div>
                                 <div class="pattern-example">
@@ -631,7 +646,7 @@ async function loadBuiltInPatterns() {
 
         // Group patterns by category
         const categories = {
-            '🔑 API Keys & Tokens': ['openai_key', 'anthropic_key', 'google_api_key', 'jwt_token'],
+            '🔑 API Keys & Tokens': ['openai_key', 'anthropic_key', 'google_api_key', 'deepseek_key', 'huggingface_token', 'mistral_key', 'replicate_token', 'cohere_key', 'jwt_token'],
             '☁️ Cloud Services': ['aws_access_key', 'aws_secret_key', 'aws_session_token'],
             '🐙 Version Control': ['github_token', 'github_oauth', 'github_pat'],
             '💬 Communication': ['slack_bot_token', 'slack_user_token', 'slack_webhook', 'discord_token', 'discord_webhook'],
@@ -673,6 +688,9 @@ async function loadBuiltInPatterns() {
                                 <div class="pattern-header">
                                     <div class="pattern-name">${p.name}</div>
                                 </div>
+                                ${p.example ? `<div class="pattern-detail">
+                                    Example: <code>${escapeHtml(p.example)}</code>
+                                </div>` : ''}
                                 <div class="pattern-detail">
                                     Replacement: <code>${escapeHtml(p.replacement)}</code>
                                 </div>
@@ -887,7 +905,6 @@ function handleTestInput() {
 async function handleSavePattern() {
     const name = patternNameInput.value.trim();
     const replacement = replacementTextInput.value.trim();
-    const example = exampleInput.value.trim();
     const caseSensitive = document.getElementById('case-sensitive').checked;
     const regex = regexEditor.classList.contains('hidden')
         ? currentGenerated.regex
@@ -926,7 +943,6 @@ async function handleSavePattern() {
         regex,
         flags: caseSensitive ? 'g' : 'gi',
         replacement,
-        example,
         created: new Date().toISOString(),
         enabled: true
     };
@@ -951,8 +967,8 @@ function editCustomPattern(groupId, patternId) {
 
     console.log('🔧 Editing pattern:', patternId, 'in group:', groupId);
 
-    // Fill form
-    exampleInput.value = pattern.example;
+    // Fill form (example is not stored — leave empty)
+    exampleInput.value = '';
     patternNameInput.value = pattern.name;
     replacementTextInput.value = pattern.replacement;
     document.getElementById('case-sensitive').checked = pattern.flags.includes('g') && !pattern.flags.includes('i');
@@ -962,8 +978,15 @@ function editCustomPattern(groupId, patternId) {
         groupSelect.value = groupId;
     }
 
-    // Trigger analysis
-    handleExampleInput();
+    // Show config and regex directly (no example needed for editing)
+    currentGenerated = { regex: pattern.regex };
+    generatedRegexCode.textContent = pattern.regex;
+    regexEditor.value = pattern.regex;
+
+    patternAnalysisSection.classList.add('hidden');
+    patternConfigSection.classList.remove('hidden');
+    patternTestSection.classList.remove('hidden');
+    patternActionsSection.classList.remove('hidden');
 
     // Scroll to form
     document.querySelector('.add-section').scrollIntoView({ behavior: 'smooth' });
