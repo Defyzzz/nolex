@@ -100,6 +100,12 @@ body {
     color: #fff;
 }
 
+.section-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .pattern-count {
     background: rgba(52, 152, 219, 0.2);
     color: #5dade2;
@@ -181,6 +187,7 @@ body {
     gap: 8px;
     color: rgba(236, 240, 241, 0.6);
     font-size: 14px;
+    cursor: pointer;
 }
 
 .expand-icon {
@@ -210,6 +217,10 @@ body {
 
 .pattern-item:hover {
     background: rgba(52, 152, 219, 0.05);
+}
+
+.pattern-item.pattern-disabled {
+    opacity: 0.5;
 }
 
 .pattern-header {
@@ -286,6 +297,128 @@ body {
     font-size: 12px;
     color: rgba(236, 240, 241, 0.5);
     font-style: italic;
+}
+
+/* Select Field */
+.select-field {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%235dade2' stroke-width='2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+.select-field option {
+    background: #1a1a2e;
+    color: #ecf0f1;
+}
+
+/* Group Select Row */
+.group-select-row {
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(52, 152, 219, 0.15);
+}
+
+.group-select-wrapper {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.group-select-wrapper .select-field {
+    flex: 1;
+}
+
+/* Group Header */
+.group-header {
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.group-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.group-description {
+    display: block;
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(236, 240, 241, 0.5);
+    margin-top: 2px;
+}
+
+.group-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.group-disabled {
+    opacity: 0.6;
+    border-color: rgba(52, 152, 219, 0.1);
+}
+
+.group-disabled .category-header {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.empty-group-state {
+    padding: 20px;
+    text-align: center;
+    color: rgba(236, 240, 241, 0.4);
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(231, 76, 60, 0.4);
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.toggle-switch input:checked + .toggle-slider {
+    background: rgba(46, 204, 113, 0.6);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(16px);
 }
 
 /* Pattern Analysis */
@@ -514,6 +647,30 @@ body {
     padding: 6px 12px;
 }
 
+.btn-small {
+    padding: 8px 14px;
+    font-size: 13px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+}
+
+.btn-small:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-accent {
+    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+    color: white;
+}
+
+.btn-accent:hover {
+    background: linear-gradient(135deg, #af7ac5 0%, #9b59b6 100%);
+}
+
 .icon-btn {
     background: rgba(52, 152, 219, 0.1);
     border: 1px solid rgba(52, 152, 219, 0.3);
@@ -530,6 +687,11 @@ body {
 .icon-btn:hover {
     background: rgba(52, 152, 219, 0.2);
     border-color: #5dade2;
+}
+
+.icon-btn-sm {
+    padding: 4px;
+    border-radius: 4px;
 }
 
 .icon-btn-danger {
@@ -621,4 +783,25 @@ body {
     display: flex;
     gap: 12px;
     justify-content: center;
+}
+
+/* Group Dialog Modal */
+.group-dialog-modal {
+    max-width: 460px;
+    text-align: left;
+}
+
+.group-dialog-modal h3 {
+    font-size: 18px;
+    color: #fff;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.group-dialog-modal .form-group {
+    margin-bottom: 16px;
+}
+
+.group-dialog-modal .confirm-buttons {
+    margin-top: 20px;
 }

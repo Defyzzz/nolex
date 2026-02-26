@@ -71,13 +71,24 @@ document.addEventListener('DOMContentLoaded', async () => {
 // Загрузка названий кастомных паттернов
 async function loadCustomPatternNames() {
     try {
-        const result = await chrome.storage.local.get(['customPatterns']);
-        const patterns = result.customPatterns || {};
+        const result = await chrome.storage.local.get(['customPatternGroups', 'customPatterns']);
 
         customPatternNames = {};
-        for (const [id, pattern] of Object.entries(patterns)) {
-            customPatternNames[id] = pattern.name || id;
+
+        if (result.customPatternGroups) {
+            // New grouped format
+            for (const group of Object.values(result.customPatternGroups)) {
+                for (const [id, pattern] of Object.entries(group.patterns || {})) {
+                    customPatternNames[id] = pattern.name || id;
+                }
+            }
+        } else if (result.customPatterns) {
+            // Legacy flat format
+            for (const [id, pattern] of Object.entries(result.customPatterns)) {
+                customPatternNames[id] = pattern.name || id;
+            }
         }
+
         console.log('📋 Загружены названия кастомных паттернов:', Object.keys(customPatternNames).length);
     } catch (error) {
         console.error('❌ Ошибка загрузки названий паттернов:', error);

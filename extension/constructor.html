@@ -35,6 +35,19 @@
                 </p>
 
                 <div class="add-pattern-form">
+                    <!-- Group Selection -->
+                    <div class="form-group group-select-row">
+                        <label for="group-select">Add to Group</label>
+                        <div class="group-select-wrapper">
+                            <select id="group-select" class="input-field select-field">
+                                <option value="">No groups - create one first</option>
+                            </select>
+                            <button id="new-group-inline-btn" class="btn btn-small btn-accent" title="Create new group">
+                                + New Group
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Step 1: Input Example -->
                     <div class="form-group">
                         <label for="example-input">Example String</label>
@@ -141,10 +154,20 @@
             <section class="section custom-section">
                 <div class="section-header">
                     <h2>✨ Custom Patterns</h2>
-                    <span class="pattern-count" id="custom-count">0</span>
+                    <div class="section-header-actions">
+                        <button id="import-group-btn" class="btn btn-small btn-secondary" title="Import pattern group from JSON file">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            Import
+                        </button>
+                        <span class="pattern-count" id="custom-count">0</span>
+                    </div>
                 </div>
                 <p class="section-description">
-                    Patterns you've created. Click to edit or delete.
+                    Organize patterns into groups. Import/export groups to share with your team.
                 </p>
                 <div id="custom-patterns" class="patterns-container">
                     <div class="empty-state">
@@ -157,6 +180,8 @@
                         <small>Create your first pattern above</small>
                     </div>
                 </div>
+                <!-- Hidden file input for import -->
+                <input type="file" id="import-file-input" accept=".json" class="hidden">
             </section>
 
             <!-- Built-in Patterns Section -->
@@ -187,6 +212,27 @@
                 <div class="confirm-buttons">
                     <button id="confirm-cancel" class="btn btn-secondary">Cancel</button>
                     <button id="confirm-ok" class="btn btn-primary">Delete</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Group Create/Edit Dialog -->
+        <div id="group-dialog" class="confirm-overlay hidden">
+            <div class="confirm-modal group-dialog-modal">
+                <h3 id="group-dialog-title">New Group</h3>
+                <div class="form-group">
+                    <label for="group-name-input">Group Name</label>
+                    <input type="text" id="group-name-input" class="input-field"
+                        placeholder="e.g., Company Security Rules">
+                </div>
+                <div class="form-group">
+                    <label for="group-desc-input">Description (optional)</label>
+                    <input type="text" id="group-desc-input" class="input-field"
+                        placeholder="e.g., Corporate data protection patterns">
+                </div>
+                <div class="confirm-buttons">
+                    <button id="group-dialog-cancel" class="btn btn-secondary">Cancel</button>
+                    <button id="group-dialog-save" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </div>

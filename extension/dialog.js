@@ -293,6 +293,13 @@
                     border: 1px solid #e74c3c;
                     color: #ffffff;
                     font-weight: 600;
+                    transition: all 0.3s ease;
+                }
+
+                .sanitizer-highlight.highlight-active {
+                    background: rgba(231, 76, 60, 0.7);
+                    box-shadow: 0 0 8px rgba(231, 76, 60, 0.6), 0 0 16px rgba(231, 76, 60, 0.3);
+                    border-color: #ff6b6b;
                 }
 
                 .sanitizer-preview {
@@ -302,7 +309,85 @@
                 .findings-list {
                     display: flex;
                     flex-direction: column;
-                    gap: 12px;
+                    gap: 8px;
+                }
+
+                .finding-group {
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                    border-radius: 10px;
+                    overflow: hidden;
+                }
+
+                .finding-group-header {
+                    background: rgba(0, 0, 0, 0.3);
+                    padding: 12px 16px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                    user-select: none;
+                }
+
+                .finding-group-header:hover {
+                    background: rgba(52, 152, 219, 0.1);
+                }
+
+                .finding-group-left {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .finding-group-name {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 13px;
+                    font-weight: 600;
+                    color: #FFFFFF;
+                }
+
+                .finding-group-right {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .finding-group-count {
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 12px;
+                    color: rgba(236, 240, 241, 0.6);
+                    background: rgba(52, 152, 219, 0.15);
+                    padding: 2px 10px;
+                    border-radius: 10px;
+                }
+
+                .finding-group-chevron {
+                    transition: transform 0.3s ease;
+                    color: rgba(236, 240, 241, 0.5);
+                }
+
+                .finding-group-chevron.expanded {
+                    transform: rotate(180deg);
+                }
+
+                .finding-group-items {
+                    max-height: 0;
+                    overflow: hidden;
+                    transition: max-height 0.3s ease;
+                }
+
+                .finding-group-items.expanded {
+                    max-height: 50000px;
+                }
+
+                .finding-group-items .finding-item {
+                    border-radius: 0;
+                    border: none;
+                    border-top: 1px solid rgba(255, 255, 255, 0.05);
+                }
+
+                .finding-group-items .finding-item:hover {
+                    border-color: rgba(255, 255, 255, 0.05);
                 }
 
                 .sanitizer-feedback {
@@ -352,11 +437,17 @@
                     display: flex;
                     align-items: flex-start;
                     gap: 12px;
+                    cursor: pointer;
                 }
 
                 .finding-item:hover {
                     border-color: #3498db;
                     background: rgba(52, 152, 219, 0.1);
+                }
+
+                .finding-item.finding-active {
+                    border-color: #e74c3c;
+                    background: rgba(231, 76, 60, 0.1);
                 }
 
                 .finding-item.disabled {
@@ -503,15 +594,91 @@
         },
 
         /**
-         * Заполняет список findings (DOM-based)
+         * Заполняет список findings, группируя по типу паттерна
          */
         populateFindings(findings) {
             const findingsList = this.currentDialog.querySelector('#sanitizer-findings-list');
-            findingsList.textContent = ''; // Clear using textContent is safe
+            findingsList.textContent = '';
 
+            // Group findings by pattern name
+            const groups = {};
             findings.forEach(finding => {
-                const item = this.createFindingItem(finding);
-                findingsList.appendChild(item);
+                const key = finding.name || finding.type || 'Unknown';
+                if (!groups[key]) {
+                    groups[key] = [];
+                }
+                groups[key].push(finding);
+            });
+
+            const groupEntries = Object.entries(groups);
+
+            // If only one group with few items, render flat (no need for collapsible)
+            if (groupEntries.length === 1 && groupEntries[0][1].length <= 5) {
+                groupEntries[0][1].forEach(finding => {
+                    findingsList.appendChild(this.createFindingItem(finding));
+                });
+                return;
+            }
+
+            groupEntries.forEach(([groupName, groupFindings]) => {
+                const group = document.createElement('div');
+                group.className = 'finding-group';
+
+                // Header
+                const header = document.createElement('div');
+                header.className = 'finding-group-header';
+
+                const left = document.createElement('div');
+                left.className = 'finding-group-left';
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'finding-group-name';
+                nameSpan.textContent = groupName;
+                left.appendChild(nameSpan);
+
+                const right = document.createElement('div');
+                right.className = 'finding-group-right';
+
+                const countSpan = document.createElement('span');
+                countSpan.className = 'finding-group-count';
+                countSpan.textContent = groupFindings.length;
+                right.appendChild(countSpan);
+
+                const chevron = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                chevron.setAttribute('width', '16');
+                chevron.setAttribute('height', '16');
+                chevron.setAttribute('viewBox', '0 0 24 24');
+                chevron.setAttribute('fill', 'none');
+                chevron.setAttribute('stroke', 'currentColor');
+                chevron.setAttribute('stroke-width', '2');
+                chevron.classList.add('finding-group-chevron');
+
+                const polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                polyline.setAttribute('points', '6 9 12 15 18 9');
+                chevron.appendChild(polyline);
+                right.appendChild(chevron);
+
+                header.appendChild(left);
+                header.appendChild(right);
+                group.appendChild(header);
+
+                // Items container (collapsed by default)
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'finding-group-items';
+
+                groupFindings.forEach(finding => {
+                    itemsContainer.appendChild(this.createFindingItem(finding));
+                });
+
+                group.appendChild(itemsContainer);
+                findingsList.appendChild(group);
+
+                // Toggle expand/collapse
+                header.addEventListener('click', () => {
+                    const isExpanded = itemsContainer.classList.contains('expanded');
+                    itemsContainer.classList.toggle('expanded');
+                    chevron.classList.toggle('expanded');
+                });
             });
         },
 
@@ -533,6 +700,7 @@
                 // The sensitive part (highlighted)
                 const span = document.createElement('span');
                 span.className = 'sanitizer-highlight';
+                span.dataset.findingId = finding.id;
                 span.textContent = finding.value;
                 container.appendChild(span);
 
@@ -607,6 +775,14 @@
                 const isChecked = e.target.checked;
                 input.disabled = !isChecked;
                 item.classList.toggle('disabled', !isChecked);
+            });
+
+            // Click to scroll preview to this finding
+            item.addEventListener('click', (e) => {
+                // Don't trigger scroll when clicking checkbox or input
+                if (e.target.tagName === 'INPUT') return;
+
+                this.scrollToFinding(finding.id);
             });
 
             return item;
@@ -719,6 +895,44 @@
                     }
                 }, 300);
             }
+        },
+
+        /**
+         * Прокрутить preview к найденному совпадению и подсветить его
+         */
+        scrollToFinding(findingId) {
+            if (!this.currentDialog) return;
+
+            const preview = this.currentDialog.querySelector('#sanitizer-text-preview');
+            const highlight = preview.querySelector(`.sanitizer-highlight[data-finding-id="${findingId}"]`);
+            if (!highlight) return;
+
+            // Remove previous active states
+            preview.querySelectorAll('.sanitizer-highlight.highlight-active').forEach(el => {
+                el.classList.remove('highlight-active');
+            });
+            this.currentDialog.querySelectorAll('.finding-item.finding-active').forEach(el => {
+                el.classList.remove('finding-active');
+            });
+
+            // Activate highlight in preview
+            highlight.classList.add('highlight-active');
+
+            // Activate finding item in list
+            const findingItem = this.currentDialog.querySelector(`.finding-item[data-finding-id="${findingId}"]`);
+            if (findingItem) {
+                findingItem.classList.add('finding-active');
+            }
+
+            // Scroll preview to the highlight
+            highlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Remove active state after a delay
+            clearTimeout(this._highlightTimeout);
+            this._highlightTimeout = setTimeout(() => {
+                highlight.classList.remove('highlight-active');
+                if (findingItem) findingItem.classList.remove('finding-active');
+            }, 2000);
         },
 
         /**

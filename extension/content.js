@@ -45,10 +45,22 @@ async function injectAllScripts() {
 // Загружаем и передаем кастомные паттерны в detector
 async function loadAndInjectCustomPatterns() {
     try {
-        const result = await chrome.storage.local.get(['customPatterns']);
-        const customPatterns = result.customPatterns || {};
+        // Try new grouped format first, fall back to legacy
+        const result = await chrome.storage.local.get(['customPatternGroups', 'customPatterns']);
+        let customPatterns;
 
-        console.log(`🔧 Content: Загружено ${Object.keys(customPatterns).length} кастомных паттернов`);
+        if (result.customPatternGroups) {
+            customPatterns = result.customPatternGroups;
+            let groupCount = Object.keys(customPatterns).length;
+            let patternCount = 0;
+            for (const g of Object.values(customPatterns)) {
+                patternCount += Object.keys(g.patterns || {}).length;
+            }
+            console.log(`🔧 Content: Загружено ${groupCount} групп, ${patternCount} кастомных паттернов`);
+        } else {
+            customPatterns = result.customPatterns || {};
+            console.log(`🔧 Content: Загружено ${Object.keys(customPatterns).length} кастомных паттернов (legacy)`);
+        }
 
         // Отправляем паттерны в контекст страницы
         const event = new CustomEvent('sanitizer:setCustomPatterns', {

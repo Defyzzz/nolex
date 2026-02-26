@@ -161,35 +161,66 @@
             }
         },
 
-        // Custom patterns loaded from storage
-        customPatterns: {},
+        // Custom pattern groups loaded from storage
+        customPatternGroups: {},
 
         /**
-         * Set custom patterns (called from content script via event)
+         * Set custom pattern groups (called from content script via event)
+         * Accepts both new grouped format and legacy flat format
          */
-        setCustomPatterns(patterns) {
-            this.customPatterns = patterns || {};
-            console.log(`🔧 Loaded ${Object.keys(this.customPatterns).length} custom patterns`);
+        setCustomPatterns(data) {
+            if (!data) {
+                this.customPatternGroups = {};
+                console.log('🔧 Custom patterns cleared');
+                return;
+            }
+
+            // Detect format: new grouped vs legacy flat
+            const firstValue = Object.values(data)[0];
+            if (firstValue && firstValue.patterns !== undefined) {
+                // New grouped format
+                this.customPatternGroups = data;
+                const groupCount = Object.keys(data).length;
+                let patternCount = 0;
+                for (const g of Object.values(data)) {
+                    patternCount += Object.keys(g.patterns || {}).length;
+                }
+                console.log(`🔧 Loaded ${groupCount} groups, ${patternCount} custom patterns`);
+            } else {
+                // Legacy flat format — wrap in a single group
+                this.customPatternGroups = {
+                    legacy: {
+                        id: 'legacy',
+                        name: 'Legacy Patterns',
+                        enabled: true,
+                        patterns: data
+                    }
+                };
+                console.log(`🔧 Loaded ${Object.keys(data).length} custom patterns (legacy format)`);
+            }
         },
 
         /**
-         * Get all patterns (built-in + custom merged)
+         * Get all patterns (built-in + custom from enabled groups)
          */
         getAllPatterns() {
-            // Merge built-in and custom patterns
-            // Custom patterns take priority if there's a name collision
             const allPatterns = { ...this.patterns };
 
-            for (const [id, customPattern] of Object.entries(this.customPatterns)) {
-                if (customPattern.enabled !== false) {
-                    try {
-                        allPatterns[id] = {
-                            regex: new RegExp(customPattern.regex, customPattern.flags),
-                            name: customPattern.name,
-                            replacement: customPattern.replacement
-                        };
-                    } catch (error) {
-                        console.error(`❌ Error creating regex for pattern ${id}:`, error);
+            for (const group of Object.values(this.customPatternGroups)) {
+                // Skip disabled groups
+                if (group.enabled === false) continue;
+
+                for (const [id, customPattern] of Object.entries(group.patterns || {})) {
+                    if (customPattern.enabled !== false) {
+                        try {
+                            allPatterns[id] = {
+                                regex: new RegExp(customPattern.regex, customPattern.flags),
+                                name: customPattern.name,
+                                replacement: customPattern.replacement
+                            };
+                        } catch (error) {
+                            console.error(`❌ Error creating regex for pattern ${id}:`, error);
+                        }
                     }
                 }
             }
