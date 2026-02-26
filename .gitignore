@@ -31,3 +31,6 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# Internal docs (not for repo)
+lending page/
