@@ -3,10 +3,10 @@
 ## Short Description (132 chars max)
 
 ```
-Protect your sensitive data when using AI chatbots. Detects personal info in text, clipboard, and file uploads — 100% local.
+Protect sensitive data when using AI. Detects API keys, credentials, and personal info in text and file uploads — locally.
 ```
 
-(125 characters)
+(121 characters)
 
 ---
 
@@ -20,15 +20,28 @@ Nolex runs entirely in your browser. It scans text inputs, clipboard paste event
 
 WHAT IT DETECTS
 Built-in detection patterns cover:
-  • Full names (first + last)
-  • Phone numbers (international formats)
+
+AI & API Keys:
+  • OpenAI, Anthropic (Claude), Google, DeepSeek, Mistral, Cohere, Replicate, Hugging Face
+
+Cloud & DevOps Credentials:
+  • AWS (Access Key, Secret Key, Session Token)
+  • GitHub tokens (PAT, OAuth, Fine-grained)
+  • Slack tokens and webhooks
+  • Discord bot tokens and webhooks
+  • Stripe secret keys and webhook secrets
+
+Database Connection Strings:
+  • Redis, PostgreSQL, MySQL, MongoDB
+
+Personal Data:
   • Email addresses
-  • Passport and ID numbers
+  • Phone numbers (international formats)
   • Credit card numbers
-  • Bank account / IBAN numbers
-  • Tax identification numbers (INN/SNILS)
-  • Dates of birth
-  • Physical addresses
+
+Security Tokens:
+  • JWT tokens
+  • SSH/RSA private keys
 
 You can also create your own custom regex patterns with the built-in editor.
 
@@ -38,7 +51,7 @@ Don't know regex? Use the Smart Constructor to build detection rules visually �
 KEY FEATURES
   • Real-time scanning of text inputs and paste events
   • File upload interception with content analysis
-  • Built-in patterns for common personal data types
+  • 30+ built-in patterns for API keys, credentials, and personal data
   • Custom regex rules with import/export support
   • Smart Constructor for building rules without coding
   • Works on any website — not just AI platforms
@@ -49,7 +62,7 @@ PRIVACY FIRST
   • Zero telemetry, zero analytics, zero tracking
   • No accounts required, no sign-up
   • No network requests made by the extension
-  • All settings stored locally via chrome.storage.local
+  • All settings stored locally on your device
   • Open source: https://github.com/Defyzzz/nolex
 
 PERMISSIONS EXPLAINED
