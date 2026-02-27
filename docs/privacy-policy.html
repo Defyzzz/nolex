@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nolex — Privacy Policy</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background: #0a0a0f;
+            color: #e0e0e6;
+            line-height: 1.7;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 48px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .logo-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+        }
+
+        .effective-date {
+            color: #9ca3af;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #c4b5fd;
+            margin-top: 36px;
+            margin-bottom: 12px;
+        }
+
+        p, li {
+            color: #d1d5db;
+            font-size: 15px;
+            margin-bottom: 12px;
+        }
+
+        ul {
+            padding-left: 24px;
+            margin-bottom: 16px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        strong {
+            color: #e9e5f5;
+        }
+
+        a {
+            color: #a78bfa;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .highlight-box {
+            background: rgba(124, 58, 237, 0.08);
+            border-left: 3px solid #7c3aed;
+            padding: 16px 20px;
+            border-radius: 0 8px 8px 0;
+            margin: 20px 0;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+        }
+
+        .footer {
+            margin-top: 60px;
+            padding-top: 24px;
+            border-top: 1px solid #1f1f2e;
+            color: #6b7280;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <div class="logo-icon">N</div>
+            <div class="logo-text">Nolex</div>
+        </div>
+
+        <h1>Privacy Policy</h1>
+        <p class="effective-date">Effective date: February 27, 2026</p>
+
+        <div class="highlight-box">
+            <p><strong>Nolex is a local-first tool.</strong> Your data never leaves your browser. We do not collect, transmit, or store any personal information on external servers.</p>
+        </div>
+
+        <h2>1. What Nolex Does</h2>
+        <p>Nolex is a Chrome extension that helps you protect sensitive data (such as names, phone numbers, emails, and financial information) when interacting with AI platforms. It detects sensitive content in text inputs, clipboard paste events, and file uploads, and warns you before the data is sent.</p>
+
+        <h2>2. Data We Collect</h2>
+        <p><strong>None.</strong> Nolex does not collect, transmit, or share any user data. Specifically:</p>
+        <ul>
+            <li>No personal information is gathered</li>
+            <li>No browsing history is tracked</li>
+            <li>No analytics or telemetry is sent</li>
+            <li>No cookies are set by the extension</li>
+            <li>No network requests are made by the extension</li>
+        </ul>
+
+        <h2>3. Data Stored Locally</h2>
+        <p>Nolex uses <strong>chrome.storage.local</strong> to save your preferences and custom detection rules directly on your device. This includes:</p>
+        <ul>
+            <li>Toggle states (extension enabled/disabled, individual rule toggles)</li>
+            <li>Custom regex patterns you create</li>
+            <li>Smart Constructor settings</li>
+        </ul>
+        <p>This data is stored entirely on your device and is never sent anywhere. You can clear it at any time by removing the extension or clearing extension data in Chrome settings.</p>
+
+        <h2>4. Permissions Explained</h2>
+        <p>Nolex requests the following Chrome permissions:</p>
+        <ul>
+            <li><strong>scripting</strong> — to inject the data detection script into web pages</li>
+            <li><strong>storage</strong> — to save your preferences locally on your device</li>
+            <li><strong>activeTab</strong> — to interact with the currently active tab when you use the extension</li>
+            <li><strong>tabs</strong> — to check the current tab URL and apply detection rules</li>
+            <li><strong>host_permissions (&lt;all_urls&gt;)</strong> — to run the content script on all websites, since AI platforms may be hosted on any domain</li>
+        </ul>
+
+        <h2>5. Third-Party Services</h2>
+        <p>Nolex does not integrate with, connect to, or send data to any third-party services, APIs, or servers. All processing happens locally in your browser.</p>
+
+        <h2>6. User Accounts</h2>
+        <p>Nolex does not require registration or user accounts. The extension works immediately after installation with no sign-up needed.</p>
+
+        <h2>7. Children's Privacy</h2>
+        <p>Nolex does not knowingly collect any data from anyone, including children under the age of 13.</p>
+
+        <h2>8. Changes to This Policy</h2>
+        <p>If we update this Privacy Policy, the changes will be posted on this page with an updated effective date. Since Nolex does not collect any contact information, we recommend checking this page periodically.</p>
+
+        <h2>9. Contact</h2>
+        <p>If you have questions about this Privacy Policy, please reach out:</p>
+        <ul>
+            <li>Email: <a href="mailto:support@nolex.zendesk.com">support@nolex.zendesk.com</a></li>
+            <li>GitHub: <a href="https://github.com/Defyzzz/nolex">github.com/Defyzzz/nolex</a></li>
+        </ul>
+
+        <div class="footer">
+            <p>&copy; 2026 Nolex. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
