@@ -284,7 +284,7 @@ function handleMenuItemClick(e) {
             chrome.tabs.create({ url: 'constructor.html' });
             break;
         case 'support':
-            chrome.tabs.create({ url: 'mailto:support@nolex.zendesk.com?subject=Nolex Support Request' });
+            chrome.tabs.create({ url: 'mailto:riskoffice23@gmail.com?subject=Nolex Support Request' });
             break;
     }
 }
