@@ -273,6 +273,9 @@ function handleMenuItemClick(e) {
 
     // Обработка различных действий
     switch (action) {
+        case 'pro-features':
+            toggleProSubmenu(e.currentTarget);
+            break;
         case 'personal-account':
         case 'about-us':
             // Coming soon — no action
@@ -284,6 +287,14 @@ function handleMenuItemClick(e) {
             chrome.tabs.create({ url: 'mailto:support@nolex.zendesk.com?subject=Nolex Support Request' });
             break;
     }
+}
+
+function toggleProSubmenu(menuItem) {
+    const submenu = document.getElementById('pro-submenu');
+    const isOpen = submenu.classList.contains('open');
+
+    submenu.classList.toggle('open');
+    menuItem.classList.toggle('expanded');
 }
 
 // Слушать обновления от background

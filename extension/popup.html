@@ -58,67 +58,9 @@
                         <small>Start using the web to see statistics</small>
                     </div>
                 </div>
+                <button id="reset-btn" class="secondary-btn reset-btn">Reset Statistics</button>
             </div>
 
-            <!-- Pro Features Section -->
-            <div class="pro-section">
-                <div class="pro-header">
-                    <h2 class="section-title">Pro Features</h2>
-                    <span class="badge-pro">Coming Soon</span>
-                </div>
-                <div class="pro-features-list">
-                    <div class="pro-feature-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                            <polyline points="14 2 14 8 20 8"></polyline>
-                        </svg>
-                        <div class="pro-feature-info">
-                            <span class="pro-feature-name">Document Scanning</span>
-                            <small>PDF, Excel, Word, CSV files</small>
-                        </div>
-                        <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </div>
-                    <div class="pro-feature-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="9" cy="7" r="4"></circle>
-                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                        </svg>
-                        <div class="pro-feature-info">
-                            <span class="pro-feature-name">Team Sync</span>
-                            <small>Share patterns across team</small>
-                        </div>
-                        <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </div>
-                    <div class="pro-feature-item">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polyline points="16 16 12 12 8 16"></polyline>
-                            <line x1="12" y1="12" x2="12" y2="21"></line>
-                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
-                        </svg>
-                        <div class="pro-feature-info">
-                            <span class="pro-feature-name">Cloud Backup</span>
-                            <small>Sync settings across devices</small>
-                        </div>
-                        <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Footer -->
-            <div class="footer">
-                <button id="reset-btn" class="secondary-btn">Reset Statistics</button>
-            </div>
         </div>
     </div>
 
@@ -136,13 +78,71 @@
 
         <div class="content">
             <nav class="menu-nav">
+                <a href="#" class="menu-item menu-item-pro" data-action="pro-features">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                    </svg>
+                    <span>Pro Features</span>
+                    <span class="badge-pro">Coming Soon</span>
+                    <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </a>
+                <div class="pro-submenu" id="pro-submenu">
+                    <div class="pro-feature-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        <div class="pro-feature-info">
+                            <span class="pro-feature-name">Document Scanning</span>
+                            <small>PDF, Excel, Word, CSV files</small>
+                        </div>
+                        <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <div class="pro-feature-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                        <div class="pro-feature-info">
+                            <span class="pro-feature-name">Team Sync</span>
+                            <small>Share patterns across team</small>
+                        </div>
+                        <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                    <div class="pro-feature-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="16 16 12 12 8 16"></polyline>
+                            <line x1="12" y1="12" x2="12" y2="21"></line>
+                            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"></path>
+                        </svg>
+                        <div class="pro-feature-info">
+                            <span class="pro-feature-name">Cloud Backup</span>
+                            <small>Sync settings across devices</small>
+                        </div>
+                        <svg class="lock-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                        </svg>
+                    </div>
+                </div>
+
                 <a href="#" class="menu-item menu-item-disabled" data-action="personal-account">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
                     <span>Personal Account</span>
-                    <span class="badge-coming-soon">Coming Soon</span>
+                    <span class="badge-pro">Coming Soon</span>
                 </a>
 
                 <a href="#" class="menu-item menu-item-disabled" data-action="about-us">
@@ -152,7 +152,7 @@
                         <path d="M12 8h.01"></path>
                     </svg>
                     <span>About Us</span>
-                    <span class="badge-coming-soon">Coming Soon</span>
+                    <span class="badge-pro">Coming Soon</span>
                 </a>
 
                 <a href="#" class="menu-item" data-action="data-constructor">
@@ -162,7 +162,7 @@
                         <rect x="14" y="14" width="7" height="7"></rect>
                         <rect x="3" y="14" width="7" height="7"></rect>
                     </svg>
-                    <span>Data Constructor</span>
+                    <span>Smart Constructor</span>
                     <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                         stroke-width="2">
                         <polyline points="9 18 15 12 9 6"></polyline>
@@ -181,10 +181,6 @@
                 </a>
             </nav>
 
-            <div class="menu-footer">
-                <p class="version">Version 2.0</p>
-                <p class="copyright">© 2026 Nolex. All rights reserved.</p>
-            </div>
         </div>
     </div>
 

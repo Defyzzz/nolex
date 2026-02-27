@@ -34,3 +34,6 @@ build/
 
 # Internal docs (not for repo)
 lending page/
+
+# Website (separate project)
+website/
