@@ -1,175 +1,114 @@
-# 🛡️ Nolex - Chrome Extension
+# Nolex — Chrome Extension
 
-Расширение для Chrome, которое автоматически обнаруживает и предотвращает утечку чувствительных данных при загрузке файлов на AI-платформы (ChatGPT, Claude, DeepSeek и др.).
+Chrome extension that automatically detects and prevents sensitive data leaks when uploading files to AI platforms (ChatGPT, Claude, DeepSeek, etc.).
 
-## 🎯 Возможности
+## Features
 
-- ✅ Автоматическое сканирование файлов перед загрузкой
-- ✅ Обнаружение 25+ типов чувствительных данных
-- ✅ Интерактивный диалог с предпросмотром найденных данных
-- ✅ Замена чувствительных данных на безопасные плейсхолдеры
-- ✅ Работает со всеми AI-платформами (ChatGPT, Claude, DeepSeek и др.)
-- ✅ Не требует отправки данных на сервер - всё работает локально
+- Automatic file scanning before upload
+- 25+ built-in sensitive data patterns
+- Smart Constructor — custom regex patterns with groups, import/export
+- Interactive dialog with match preview and selective replacement
+- Local-first — everything runs in your browser, no data is sent anywhere
+- Real-time detection statistics in popup
 
-## 🔍 Детектируемые типы данных
+## Detected Data Types
 
-### API Ключи и Токены
-| Тип | Пример | Описание |
-|-----|--------|----------|
-| OpenAI API Key | `sk-...` | API ключи OpenAI |
-| Anthropic API Key | `sk-ant-...` | API ключи Claude/Anthropic |
-| Google API Key | `AIza...` | Google Cloud/Maps API ключи |
-| AWS Access Key ID | `AKIA...` | AWS идентификатор доступа |
-| **AWS Secret Access Key** | `wJalrXUtn...` | **AWS секретный ключ (40 символов)** |
-| AWS Session Token | `FwoGZXIv...` | AWS временный токен сессии |
+### API Keys & Tokens
+| Type | Example | Description |
+|------|---------|-------------|
+| OpenAI API Key | `sk-...` | OpenAI API keys |
+| Anthropic API Key | `sk-ant-...` | Claude/Anthropic API keys |
+| Google API Key | `AIza...` | Google Cloud/Maps API keys |
+| AWS Access Key ID | `AKIA...` | AWS access identifier |
+| AWS Secret Access Key | `wJalrXUtn...` | AWS secret key (40 chars) |
+| AWS Session Token | `FwoGZXIv...` | AWS temporary session token |
 | GitHub Token | `ghp_...` | GitHub Personal Access Token |
 | GitHub OAuth | `gho_...` | GitHub OAuth Token |
+| DeepSeek API Key | `sk-...` | DeepSeek API keys |
+| Hugging Face Token | `hf_...` | Hugging Face access tokens |
+| Mistral API Key | `...` | Mistral AI API keys |
+| Replicate Token | `r8_...` | Replicate API tokens |
+| Cohere API Key | `...` | Cohere API keys |
 
 ### Slack & Discord
-| Тип | Пример | Описание |
-|-----|--------|----------|
-| Slack Bot Token | `xoxb-...` | Токен Slack бота |
-| Slack User Token | `xoxp-...` | Токен пользователя Slack |
-| Slack Webhook | `https://hooks.slack.com/...` | Webhook URL для Slack |
-| Discord Bot Token | `MTk4NjI...` | Токен Discord бота |
-| Discord Webhook | `https://discord.com/api/webhooks/...` | Webhook URL для Discord |
+| Type | Example | Description |
+|------|---------|-------------|
+| Slack Bot Token | `xoxb-...` | Slack bot token |
+| Slack User Token | `xoxp-...` | Slack user token |
+| Slack Webhook | `https://hooks.slack.com/...` | Slack webhook URL |
+| Discord Bot Token | `MTk4NjI...` | Discord bot token |
+| Discord Webhook | `https://discord.com/api/webhooks/...` | Discord webhook URL |
 
-### Платежные системы
-| Тип | Пример | Описание |
-|-----|--------|----------|
-| Stripe Secret Key | `sk_live_...` / `sk_test_...` | Секретный ключ Stripe |
-| Stripe Restricted Key | `rk_live_...` / `rk_test_...` | Ограниченный ключ Stripe |
+### Payment Systems
+| Type | Example | Description |
+|------|---------|-------------|
+| Stripe Secret Key | `sk_live_...` / `sk_test_...` | Stripe secret key |
+| Stripe Restricted Key | `rk_live_...` / `rk_test_...` | Stripe restricted key |
+| Credit Card | `4532148803436467` | Credit card numbers |
 
-### База данных
-| Тип | Пример | Описание |
-|-----|--------|----------|
-| PostgreSQL URL | `postgresql://user:pass@host/db` | Строка подключения PostgreSQL |
-| MySQL URL | `mysql://user:pass@host/db` | Строка подключения MySQL |
-| MongoDB URL | `mongodb://user:pass@host/db` | Строка подключения MongoDB |
+### Databases
+| Type | Example | Description |
+|------|---------|-------------|
+| PostgreSQL URL | `postgresql://user:pass@host/db` | PostgreSQL connection string |
+| MySQL URL | `mysql://user:pass@host/db` | MySQL connection string |
+| MongoDB URL | `mongodb://user:pass@host/db` | MongoDB connection string |
+| Redis URL | `redis://user:pass@host:port` | Redis connection string |
 
-### Личные данные
-| Тип | Пример | Описание |
-|-----|--------|----------|
-| Email | `user@example.com` | Email адреса |
-| Телефон (РФ) | `+7 (999) 123-45-67` | Российские номера телефонов |
-| Международный телефон | `+1 234 567 8900` | Международные номера |
-| Кредитная карта | `4532148803436467` | Номера кредитных карт |
+### Personal Data
+| Type | Example | Description |
+|------|---------|-------------|
+| Email | `user@example.com` | Email addresses |
+| Phone (RU) | `+7 (999) 123-45-67` | Russian phone numbers |
+| International Phone | `+1 234 567 8900` | International phone numbers |
 
-### Другие токены
-| Тип | Пример | Описание |
-|-----|--------|----------|
+### Other
+| Type | Example | Description |
+|------|---------|-------------|
 | JWT Token | `eyJ...` | JSON Web Tokens |
-| SSH/RSA Private Key | `-----BEGIN PRIVATE KEY-----` | Приватные ключи |
+| Private Key | `-----BEGIN PRIVATE KEY-----` | SSH/RSA private keys |
 
-## 📦 Установка
+## Installation
 
-1. Скачайте или клонируйте этот репозиторий
-2. Откройте Chrome и перейдите на `chrome://extensions/`
-3. Включите "Режим разработчика" в правом верхнем углу
-4. Нажмите "Загрузить распакованное расширение"
-5. Выберите папку с расширением
-6. Готово! Расширение активно ✅
+1. Clone or download this repository
+2. Open `chrome://extensions/` in Chrome
+3. Enable "Developer mode" (top right)
+4. Click "Load unpacked"
+5. Select the `extension/` folder
 
-## 🚀 Использование
+## Usage
 
-1. Откройте любую AI-платформу (ChatGPT, Claude, DeepSeek и т.д.)
-2. Попробуйте загрузить файл с чувствительными данными
-3. Если найдены чувствительные данные, появится диалог с тремя опциями:
-   - **Отменить загрузку** - файл не будет загружен
-   - **Оставить как есть** - загрузить файл без изменений (на ваш риск)
-   - **Заменить и продолжить** - заменить чувствительные данные на плейсхолдеры
+1. Open any AI platform (ChatGPT, Claude, DeepSeek, etc.)
+2. Upload a file containing sensitive data
+3. If sensitive data is found, a dialog appears with options:
+   - **Cancel upload** — file won't be uploaded
+   - **Keep as is** — upload without changes (at your own risk)
+   - **Replace and continue** — replace sensitive data with safe placeholders
 
-## ⚠️ Известные ограничения
+## Architecture
 
-### DeepSeek
-- ❌ Не принимает `.env` файлы напрямую
-- ✅ **Решение**: переименуйте `.env` в `.txt` перед загрузкой
-- DeepSeek принимает: `.doc`, `.docx`, `.xlsx`, `.ppt`, `.txt`, `.pdf` и другие текстовые форматы
+- `manifest.json` — extension config
+- `content.js` — module initialization on page
+- `detector.js` — sensitive data detection engine
+- `dialog.js` — interactive UI dialog
+- `constructor.js` — Smart Constructor for custom patterns
+- `interceptor.js` — fetch/XHR interception for file checking
+- `popup.js/html/css` — extension popup with stats
 
-### Другие платформы
-- ChatGPT, Claude, Gemini - работают со всеми типами файлов без ограничений ✅
+## Testing
 
-## 🧪 Тестирование
+Test files are available in `test_files/` directory. See [TESTING.md](TESTING.md) for details.
 
-В папке `test_files/` есть тестовые файлы для проверки детектора:
+## FAQ
 
-- `test.txt` - базовые тесты (OpenAI ключи, email, телефоны)
-- `test.json` - JSON с различными типами данных
-- `test.env` - environment переменные
-- `test_aws.txt` - AWS credentials (Access Key, Secret Key, Session Token)
-- `test_databases.txt` - строки подключения к БД
-- `test_slack_discord.txt` - токены Slack и Discord
-- `test_stripe.txt` - Stripe API ключи
+**Q: Is any data sent to a server?**
+A: No. Everything runs locally in your browser. No data ever leaves your device.
 
-Подробная инструкция по тестированию: [TESTING.md](TESTING.md)
+**Q: Can I add custom patterns?**
+A: Yes! Use the Smart Constructor in the extension menu to create, group, import/export patterns.
 
-## 🔧 Архитектура
+**Q: Does it slow down file uploads?**
+A: Minimally. Scanning is near-instant for files up to several megabytes.
 
-- `manifest.json` - конфигурация расширения
-- `content.js` - инициализация модулей на странице
-- `detector.js` - модуль детектирования чувствительных данных
-- `dialog.js` - UI диалога для взаимодействия с пользователем
-- `interceptor.js` - перехват fetch/XMLHttpRequest для проверки файлов
+## License
 
-## 🛠️ Разработка
-
-### Обновление паттернов
-
-Все паттерны находятся в `detector.js` в объекте `patterns`. Каждый паттерн содержит:
-- `regex` - регулярное выражение для поиска
-- `name` - человекочитаемое описание
-- `replacement` - значение для замены
-
-### Добавление нового типа данных
-
-1. Откройте `detector.js`
-2. Добавьте новый паттерн в объект `patterns`
-3. Создайте тестовый файл в `test_files/`
-4. Протестируйте на реальной AI-платформе
-
-## 🤝 Вклад
-
-Приветствуются:
-- Новые паттерны для детектирования
-- Улучшение существующих регулярных выражений
-- Улучшение UI/UX
-- Исправление багов
-- Документация
-
-## 📝 Changelog
-
-### v3.2 (текущая версия)
-- ✅ Добавлен детектор AWS Secret Access Key
-- ✅ Добавлены Slack токены (bot, user, webhook)
-- ✅ Добавлены Discord токены и webhooks
-- ✅ Добавлены Stripe API ключи
-- ✅ Добавлены database connection strings (PostgreSQL, MySQL, MongoDB)
-- ✅ Улучшено детектирование международных номеров телефонов
-- ✅ Добавлены GitHub OAuth токены
-- ✅ Создана расширенная документация
-
-### v3.0
-- ✅ Поддержка ChatGPT (прямая отправка File через XHR)
-- ✅ Поддержка DeepSeek (FormData через XHR)
-- ✅ Улучшенный UI диалога
-
-## 📄 Лицензия
-
-MIT License - используйте свободно!
-
-## ⚡ FAQ
-
-**Q: Данные отправляются куда-то на сервер?**  
-A: Нет! Всё работает локально в браузере. Никакие данные не покидают ваш компьютер.
-
-**Q: Почему не работает с .env файлами на DeepSeek?**  
-A: DeepSeek имеет ограничения на типы файлов. Переименуйте `.env` в `.txt`.
-
-**Q: Можно ли добавить свои паттерны?**  
-A: Да! Откройте `detector.js` и добавьте свой паттерн в объект `patterns`.
-
-**Q: Расширение замедляет загрузку файлов?**  
-A: Минимально. Проверка происходит мгновенно для файлов до нескольких мегабайт.
-
-**Q: Поддерживаются ли бинарные файлы?**  
-A: Расширение проверяет только текстовые файлы. Изображения, видео и другие бинарные файлы пропускаются.
+MIT License

@@ -1,23 +1,12 @@
-# 📱 Nolex App
+# Nolex App
 
-Мобильное и десктоп приложение для защиты данных при работе с AI.
+Mobile and desktop application for sensitive data protection when working with AI.
 
-## 🎯 Цели
+## Status
 
-- Защита данных на мобильных устройствах
-- Standalone приложение для десктопа
-- Синхронизация настроек между устройствами
-- Расширенные возможности детектирования
+Coming soon.
 
-## 🚧 Статус
-
-В разработке
-
-## 🛠️ Технологии
-
-TBD (React Native, Electron, Flutter, или другое)
-
-## 📋 Планируемые платформы
+## Planned Platforms
 
 - iOS
 - Android
