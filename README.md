@@ -1,4 +1,4 @@
-# Nolex
+# <img src="extension/icons/icon128.png" width="32" height="32"> Nolex
 
 **Protect sensitive data when working with AI**
 
