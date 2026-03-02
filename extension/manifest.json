@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Nolex",
-    "version": "2.0",
+    "version": "2.0.1",
     "description": "Protects against sensitive data leaks when uploading files and clipboard",
     "homepage_url": "https://github.com/Defyzzz/nolex",
     "icons": {
@@ -22,7 +22,6 @@
         "service_worker": "background.js"
     },
     "permissions": [
-        "scripting",
         "storage",
         "activeTab",
         "tabs"
