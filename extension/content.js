@@ -127,6 +127,28 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
+// Слушаем запрос настроек расширений файлов от interceptor.js (через postMessage)
+window.addEventListener('message', async (event) => {
+    if (event.source !== window) return;
+    if (event.data && event.data.type === 'NOLEX_FILE_EXT_SETTINGS_REQ') {
+        try {
+            const result = await chrome.storage.local.get('fileExtensionSettings');
+            const settings = result.fileExtensionSettings || null;
+            window.postMessage({
+                type: 'NOLEX_FILE_EXT_SETTINGS_RESULT',
+                reqId: event.data.reqId,
+                settings
+            }, '*');
+        } catch (e) {
+            window.postMessage({
+                type: 'NOLEX_FILE_EXT_SETTINGS_RESULT',
+                reqId: event.data.reqId,
+                settings: null
+            }, '*');
+        }
+    }
+});
+
 // Слушаем события от interceptor.js (из контекста страницы)
 window.addEventListener('sanitizer:showDialog', async (event) => {
     console.log('🛡️ Content: Получен запрос на показ диалога', event.detail);

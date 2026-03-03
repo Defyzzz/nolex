@@ -283,6 +283,9 @@ function handleMenuItemClick(e) {
         case 'data-constructor':
             chrome.tabs.create({ url: 'constructor.html' });
             break;
+        case 'settings':
+            chrome.tabs.create({ url: chrome.runtime.getURL('settings.html') });
+            break;
         case 'support':
             chrome.tabs.create({ url: 'mailto:riskoffice23@gmail.com?subject=Nolex Support Request' });
             break;

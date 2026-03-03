@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Nolex</title>
+    <link rel="stylesheet" href="settings.css">
+</head>
+
+<body>
+    <div class="settings-container">
+        <!-- Header -->
+        <header class="settings-header">
+            <div class="header-title">
+                <img src="icons/icon48.png" alt="Nolex" class="header-logo">
+                <h1>Settings</h1>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="settings-main">
+            <!-- File Extensions Section -->
+            <section class="section">
+                <div class="section-header">
+                    <h2>📁 Scanned File Extensions</h2>
+                    <button id="reset-btn" class="btn btn-reset">Reset</button>
+                </div>
+                <p class="section-description">
+                    Extensions checked when files are sent to AI. Files with unlisted extensions are skipped.
+                </p>
+
+                <!-- Extension chips -->
+                <div class="extensions-container" id="extensions-container">
+                    <!-- Chips rendered by JS -->
+                </div>
+
+                <!-- Add extension -->
+                <div class="add-extension-row">
+                    <input type="text" id="ext-input" class="input-field" placeholder=".ext" maxlength="20">
+                    <button id="add-ext-btn" class="btn btn-accent">Add</button>
+                </div>
+                <div id="ext-error" class="error-msg hidden"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="settings.js"></script>
+</body>
+
+</html>

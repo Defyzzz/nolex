@@ -70,12 +70,53 @@
     }
 
     /**
+     * Checks if a file extension is in the scanned list.
+     * Returns true if the file should be scanned.
+     * Uses postMessage to cross page/content-script boundary.
+     */
+    async function shouldScanFile(filename) {
+        try {
+            const reqId = 'extCheck_' + (requestIdCounter++);
+            const settingsPromise = new Promise((resolve) => {
+                const handler = (event) => {
+                    if (event.source !== window) return;
+                    if (event.data && event.data.type === 'NOLEX_FILE_EXT_SETTINGS_RESULT' && event.data.reqId === reqId) {
+                        window.removeEventListener('message', handler);
+                        resolve(event.data.settings);
+                    }
+                };
+                window.addEventListener('message', handler);
+                setTimeout(() => {
+                    window.removeEventListener('message', handler);
+                    resolve(null);
+                }, 1000);
+            });
+            window.postMessage({ type: 'NOLEX_FILE_EXT_SETTINGS_REQ', reqId }, '*');
+            const settings = await settingsPromise;
+
+            if (!settings || !settings.enabled) return true; // No settings = scan everything
+            const dotIdx = filename.lastIndexOf('.');
+            if (dotIdx === -1) return true; // No extension = scan
+            const ext = filename.substring(dotIdx).toLowerCase();
+            return settings.enabled.includes(ext);
+        } catch (e) {
+            return true; // On error, scan everything
+        }
+    }
+
+    /**
      * Обрабатывает файл и запрашивает разрешение пользователя
      */
     async function processFile(file) {
         const fileName = file.name || "неизвестный файл";
 
         console.log(`🛡️ 🔍 Проверка файла: "${fileName}", размер: ${file.size} байт, тип: ${file.type}`);
+
+        // Check file extension against settings
+        if (!(await shouldScanFile(fileName))) {
+            console.log(`🛡️ ⏭️ Файл "${fileName}" пропущен (расширение не в списке сканирования)`);
+            return file;
+        }
 
         try {
             const fileContent = await file.text();
