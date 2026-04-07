@@ -108,7 +108,7 @@
      * Обрабатывает файл и запрашивает разрешение пользователя
      */
     async function processFile(file) {
-        const fileName = file.name || "неизвестный файл";
+        const fileName = file.name || "unknown file";
 
         console.log(`🛡️ 🔍 Проверка файла: "${fileName}", размер: ${file.size} байт, тип: ${file.type}`);
 

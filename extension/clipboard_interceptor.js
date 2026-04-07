@@ -29,7 +29,7 @@
                     window.removeEventListener('sanitizer:showDialogReady', readyHandler);
 
                     if (window.SanitizerDialog) {
-                        window.SanitizerDialog.show("Буфер обмена", clipboardText, findings)
+                        window.SanitizerDialog.show("Clipboard", clipboardText, findings)
                             .then(result => {
                                 const resultEvent = new CustomEvent('sanitizer:dialogResult', {
                                     detail: { requestId, result }
@@ -50,7 +50,7 @@
             window.addEventListener('sanitizer:showDialogReady', readyHandler);
 
             const showEvent = new CustomEvent('sanitizer:showDialog', {
-                detail: { requestId, fileName: "Буфер обмена", fileContent: clipboardText, findings }
+                detail: { requestId, fileName: "Clipboard", fileContent: clipboardText, findings }
             });
             window.dispatchEvent(showEvent);
 
