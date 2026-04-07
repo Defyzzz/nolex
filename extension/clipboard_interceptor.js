@@ -71,75 +71,54 @@
      */
     function insertTextIntoElement(element, text) {
         if (!element) {
-            console.warn('🛡️ ⚠️ Нет активного элемента для вставки');
+            console.warn('🛡️ ⚠️ No active element for insertion');
             return;
         }
 
-        // Симулируем клик и фокус для активации элемента
         element.click();
         element.focus();
 
-        // Для обычных input и textarea
-        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
-            // Сначала установим значение напрямую
-            const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-                window.HTMLTextAreaElement.prototype, 'value'
-            )?.set || Object.getOwnPropertyDescriptor(
-                window.HTMLInputElement.prototype, 'value'
-            )?.set;
+        // 1. Try execCommand first — best compatibility with React/Vue
+        try {
+            if (document.execCommand('insertText', false, text)) {
+                console.log('🛡️ ✓ Text inserted via execCommand');
+                return;
+            }
+        } catch (e) { /* fall through */ }
 
-            if (nativeInputValueSetter) {
-                nativeInputValueSetter.call(element, element.value + text);
+        // 2. Native setter fallback for INPUT/TEXTAREA
+        if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+            const proto = element.tagName === 'INPUT'
+                ? window.HTMLInputElement.prototype
+                : window.HTMLTextAreaElement.prototype;
+            const setter = Object.getOwnPropertyDescriptor(proto, 'value')?.set;
+
+            if (setter) {
+                setter.call(element, element.value + text);
             } else {
                 element.value = element.value + text;
             }
 
-            // Генерируем события для React/Vue
             element.dispatchEvent(new Event('input', { bubbles: true }));
             element.dispatchEvent(new Event('change', { bubbles: true }));
-
-            console.log('🛡️ ✓ Текст вставлен в input/textarea');
+            console.log('🛡️ ✓ Text inserted via native setter');
+            return;
         }
-        // Для contenteditable элементов (DeepSeek, ChatGPT и др.)
-        else if (element.isContentEditable || element.contentEditable === 'true') {
-            // Используем execCommand для лучшей совместимости с фреймворками
-            try {
-                // Попробуем использовать execCommand (лучшая совместимость)
-                const success = document.execCommand('insertText', false, text);
 
-                if (success) {
-                    console.log('🛡️ ✓ Текст вставлен через execCommand');
-                } else {
-                    // Fallback: вставляем напрямую
-                    insertTextManually(element, text);
-                }
-            } catch (e) {
-                // Fallback: вставляем напрямую
-                insertTextManually(element, text);
-            }
-
-            // Генерируем события для React/Vue фреймворков
+        // 3. ContentEditable fallback
+        if (element.isContentEditable || element.contentEditable === 'true') {
+            insertTextManually(element, text);
             element.dispatchEvent(new InputEvent('input', {
                 bubbles: true,
                 cancelable: true,
                 inputType: 'insertText',
                 data: text
             }));
+            console.log('🛡️ ✓ Text inserted manually into contentEditable');
+            return;
+        }
 
-            // Дополнительное событие для некоторых фреймворков
-            element.dispatchEvent(new Event('keyup', { bubbles: true }));
-        }
-        // Fallback для любых других элементов
-        else {
-            console.warn('🛡️ ⚠️ Неизвестный тип элемента:', element.tagName);
-            // Пробуем через execCommand
-            try {
-                document.execCommand('insertText', false, text);
-                console.log('🛡️ ✓ Текст вставлен через execCommand (fallback)');
-            } catch (e) {
-                console.error('🛡️ ❌ Не удалось вставить текст:', e);
-            }
-        }
+        console.warn('🛡️ ⚠️ Unknown element type:', element.tagName);
     }
 
     /**
