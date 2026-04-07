@@ -1015,8 +1015,13 @@
                 return null;
             }
 
-            // Логируем feedback
-            console.log('📝 Feedback от пользователя:', feedbackText);
+            // Send feedback to Google Forms (fire and forget)
+            const formUrl = 'https://docs.google.com/forms/d/e/1FAIpQLSciUTUiBDJCdRCov8QbIKxqTxWoxp7FJmcvM6p6o2tLlDt24Q/formResponse';
+            const body = new URLSearchParams();
+            body.append('entry.903530303', feedbackText);
+            fetch(formUrl, { method: 'POST', body, mode: 'no-cors' }).catch(() => {});
+
+            console.log('📝 Feedback sent');
 
             return {
                 text: feedbackText,
