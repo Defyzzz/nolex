@@ -3,6 +3,9 @@
     window.SanitizerDialog = {
         currentDialog: null,
         resolveCallback: null,
+        _fileContent: null,
+        _allFindings: null,
+        _strictFilterActive: false,
 
         /**
          * Показывает диалоговое окно с найденными чувствительными данными
@@ -18,6 +21,11 @@
          * Создает и показывает диалоговое окно программно (DOM-based construction)
          */
         createDialog(fileName, fileContent, findings) {
+            // Сохраняем для strict filter
+            this._fileContent = fileContent;
+            this._allFindings = findings;
+            this._strictFilterActive = false;
+
             // Внедряем стили
             this.injectStyles();
 
@@ -85,9 +93,34 @@
             const findingsDiv = document.createElement('div');
             findingsDiv.className = 'sanitizer-findings';
 
+            const findingsTitleRow = document.createElement('div');
+            findingsTitleRow.className = 'findings-title-row';
+
             const findingsTitle = document.createElement('h3');
             findingsTitle.textContent = 'Detected Data:';
-            findingsDiv.appendChild(findingsTitle);
+            findingsTitleRow.appendChild(findingsTitle);
+
+            const strictWrap = document.createElement('div');
+            strictWrap.className = 'strict-filter-wrap';
+
+            const strictBtn = document.createElement('button');
+            strictBtn.className = 'btn-strict-filter';
+            strictBtn.textContent = 'Strict Filter';
+            strictWrap.appendChild(strictBtn);
+
+            const infoBtn = document.createElement('span');
+            infoBtn.className = 'strict-info-btn';
+            infoBtn.textContent = 'i';
+            strictWrap.appendChild(infoBtn);
+
+            const infoTooltip = document.createElement('div');
+            infoTooltip.className = 'strict-info-tooltip';
+            infoTooltip.textContent = 'Removes matches that are part of a longer sequence — e.g. a phone number inside a large integer. If a digit or letter is directly adjacent to the match, it is likely a false positive and will be filtered out.';
+            strictWrap.appendChild(infoTooltip);
+
+            findingsTitleRow.appendChild(strictWrap);
+
+            findingsDiv.appendChild(findingsTitleRow);
 
             const findingsList = document.createElement('div');
             findingsList.id = 'sanitizer-findings-list';
@@ -304,6 +337,96 @@
 
                 .sanitizer-preview {
                     margin-bottom: 24px;
+                }
+
+                .findings-title-row {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    margin-bottom: 12px;
+                }
+
+                .findings-title-row h3 {
+                    margin: 0 !important;
+                }
+
+                .btn-strict-filter {
+                    padding: 4px 12px;
+                    font-family: 'JetBrains Mono', monospace;
+                    font-size: 11px;
+                    font-weight: 500;
+                    background: rgba(52, 152, 219, 0.15);
+                    color: #3498db;
+                    border: 1px solid rgba(52, 152, 219, 0.3);
+                    border-radius: 4px;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+
+                .btn-strict-filter:hover {
+                    background: rgba(52, 152, 219, 0.25);
+                    border-color: #3498db;
+                }
+
+                .btn-strict-filter.active {
+                    background: rgba(52, 152, 219, 0.4);
+                    color: #fff;
+                    border-color: #3498db;
+                }
+
+                .strict-filter-wrap {
+                    display: flex;
+                    align-items: center;
+                    gap: 6px;
+                    position: relative;
+                }
+
+                .strict-info-btn {
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    border: 1.5px solid rgba(52, 152, 219, 0.5);
+                    background: transparent;
+                    color: #3498db;
+                    font-size: 11px;
+                    font-weight: 700;
+                    font-style: italic;
+                    font-family: Georgia, 'Times New Roman', serif;
+                    cursor: help;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.2s ease;
+                }
+
+                .strict-info-btn:hover {
+                    background: rgba(52, 152, 219, 0.15);
+                    border-color: #3498db;
+                }
+
+                .strict-info-btn:hover + .strict-info-tooltip {
+                    opacity: 1;
+                    visibility: visible;
+                }
+
+                .strict-info-tooltip {
+                    position: absolute;
+                    top: calc(100% + 8px);
+                    right: 0;
+                    width: 280px;
+                    padding: 10px 12px;
+                    background: rgba(0, 0, 0, 0.9);
+                    border: 1px solid rgba(52, 152, 219, 0.3);
+                    border-radius: 6px;
+                    color: #ecf0f1;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 12px;
+                    line-height: 1.5;
+                    opacity: 0;
+                    visibility: hidden;
+                    transition: all 0.2s ease;
+                    z-index: 10;
+                    pointer-events: none;
                 }
 
                 .findings-list {
@@ -809,12 +932,37 @@
             btnReplace.addEventListener('click', () => {
                 const replacements = this.collectReplacements();
                 const feedback = this.collectFeedback();
+                const activeFindings = this._strictFilterActive
+                    ? this._allFindings.filter(f => this.passesBoundaryCheck(this._fileContent, f))
+                    : findings;
                 this.close({
                     action: 'replace',
                     replacements: replacements,
-                    findings: findings,
+                    findings: activeFindings,
                     feedback
                 });
+            });
+
+            // Strict Filter toggle
+            const strictBtn = this.currentDialog.querySelector('.btn-strict-filter');
+            strictBtn.addEventListener('click', () => {
+                this._strictFilterActive = !this._strictFilterActive;
+                strictBtn.classList.toggle('active', this._strictFilterActive);
+
+                const filtered = this._strictFilterActive
+                    ? this._allFindings.filter(f => this.passesBoundaryCheck(this._fileContent, f))
+                    : this._allFindings;
+
+                if (filtered.length === 0) {
+                    this.close({ action: 'proceed' });
+                    return;
+                }
+
+                // Re-render preview and findings
+                const preview = this.currentDialog.querySelector('#sanitizer-text-preview');
+                preview.textContent = '';
+                this.highlightSensitiveDataDOM(preview, this._fileContent, filtered);
+                this.populateFindings(filtered);
             });
 
             // ESC для закрытия
@@ -933,6 +1081,18 @@
                 highlight.classList.remove('highlight-active');
                 if (findingItem) findingItem.classList.remove('finding-active');
             }, 2000);
+        },
+
+        /**
+         * Checks if a finding has clean boundaries (no adjacent digits/letters).
+         * Returns true if the match is NOT surrounded by alphanumeric chars.
+         */
+        passesBoundaryCheck(text, finding) {
+            const boundary = /[a-zA-Z0-9]/;
+            const before = finding.index > 0 ? text[finding.index - 1] : '';
+            const after = finding.index + finding.value.length < text.length
+                ? text[finding.index + finding.value.length] : '';
+            return !boundary.test(before) && !boundary.test(after);
         },
 
         /**
