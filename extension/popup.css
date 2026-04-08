@@ -89,6 +89,15 @@ body {
     background-clip: text;
 }
 
+.header-title-link {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.header-title-link:hover h1 {
+    filter: brightness(1.2);
+}
+
 .icon-btn {
     background: transparent;
     border: none;

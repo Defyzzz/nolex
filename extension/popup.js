@@ -126,6 +126,12 @@ function setupEventListeners() {
     // Сброс статистики
     resetBtn.addEventListener('click', handleReset);
 
+    // Ссылка на сайт в header
+    document.getElementById('header-link').addEventListener('click', (e) => {
+        e.preventDefault();
+        chrome.tabs.create({ url: 'https://getnolex.com' });
+    });
+
     // Меню действия
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', handleMenuItemClick);
@@ -277,8 +283,10 @@ function handleMenuItemClick(e) {
             toggleProSubmenu(e.currentTarget);
             break;
         case 'personal-account':
-        case 'about-us':
             // Coming soon — no action
+            break;
+        case 'about-us':
+            chrome.tabs.create({ url: 'https://getnolex.com' });
             break;
         case 'data-constructor':
             chrome.tabs.create({ url: 'constructor.html' });
