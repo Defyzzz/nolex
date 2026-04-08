@@ -6,25 +6,25 @@
             // API ключи популярных сервисов
             openai_key: {
                 regex: /sk-(?:proj-|svcacct-|None-)?[a-zA-Z0-9\-_]{20,}/g,
-                name: 'API ключ OpenAI',
+                name: 'OpenAI API Key',
                 replacement: '***OPENAI_KEY_REDACTED***',
                 example: 'sk-proj-abc123def456ghi789-jkl0mnopqrst'
             },
             anthropic_key: {
                 regex: /sk-ant-[a-zA-Z0-9\-]{95,}/g,
-                name: 'API ключ Anthropic (Claude)',
+                name: 'Anthropic API Key',
                 replacement: '***ANTHROPIC_KEY_REDACTED***',
                 example: 'sk-ant-api03-aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6aB7cD8eF9gH0iJ'
             },
             google_api_key: {
                 regex: /AIza[0-9A-Za-z\-_]{35}/g,
-                name: 'API ключ Google',
+                name: 'Google API Key',
                 replacement: '***GOOGLE_KEY_REDACTED***',
                 example: 'AIzaSyA1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q'
             },
             deepseek_key: {
                 regex: /sk-[a-f0-9]{32}/g,
-                name: 'API ключ DeepSeek',
+                name: 'DeepSeek API Key',
                 replacement: '***DEEPSEEK_KEY_REDACTED***',
                 example: 'sk-a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6'
             },
@@ -36,7 +36,7 @@
             },
             mistral_key: {
                 regex: /(?:MISTRAL_API_KEY|mistral_api_key)[\s]*[=:]+[\s]*["']?([a-zA-Z0-9]{32,})["']?/g,
-                name: 'API ключ Mistral',
+                name: 'Mistral API Key',
                 replacement: 'MISTRAL_API_KEY=***MISTRAL_KEY_REDACTED***',
                 example: 'MISTRAL_API_KEY=abc123def456ghi789jkl012mno345pq'
             },
@@ -48,7 +48,7 @@
             },
             cohere_key: {
                 regex: /(?:COHERE_API_KEY|cohere_api_key|CO_API_KEY)[\s]*[=:]+[\s]*["']?([a-zA-Z0-9]{40,})["']?/g,
-                name: 'API ключ Cohere',
+                name: 'Cohere API Key',
                 replacement: 'COHERE_API_KEY=***COHERE_KEY_REDACTED***',
                 example: 'COHERE_API_KEY=abcDEF123456ghiJKL789012mnoPQR345678stuVWX'
             },
@@ -176,19 +176,19 @@
             // Личные данные
             email: {
                 regex: /(?<![:/@])[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?!:[0-9])/g,
-                name: 'Email адрес',
+                name: 'Email Address',
                 replacement: '***EMAIL_REDACTED***',
                 example: 'john.doe@example.com'
             },
             phone_ru: {
                 regex: /(\+7|8)[\s\-]?\(?\d{3}\)?[\s\-]?\d{3}[\s\-]?\d{2}[\s\-]?\d{2}/g,
-                name: 'Номер телефона (РФ)',
+                name: 'Phone Number (RU)',
                 replacement: '***PHONE_REDACTED***',
                 example: '+7 (999) 123-45-67'
             },
             phone_international: {
                 regex: /\+\d{1,3}[\s\-]?\(?\d{1,4}\)?[\s\-]?\d{1,4}[\s\-]?\d{1,4}[\s\-]?\d{1,9}/g,
-                name: 'Международный номер телефона',
+                name: 'International Phone Number',
                 replacement: '***PHONE_REDACTED***',
                 example: '+44 20 7946 0958'
             },
@@ -196,7 +196,7 @@
             // Финансовые данные
             credit_card: {
                 regex: /\b(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12})\b/g,
-                name: 'Номер кредитной карты',
+                name: 'Credit Card Number',
                 replacement: '***CARD_NUMBER_REDACTED***',
                 example: '4111111111111111'
             },
@@ -204,7 +204,7 @@
             // JWT и другие токены
             jwt_token: {
                 regex: /eyJ[a-zA-Z0-9_-]*\.eyJ[a-zA-Z0-9_-]*\.[a-zA-Z0-9_-]*/g,
-                name: 'JWT токен',
+                name: 'JWT Token',
                 replacement: '***JWT_TOKEN_REDACTED***',
                 example: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U'
             },
@@ -212,7 +212,7 @@
             // Приватные ключи
             private_key: {
                 regex: /-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----[\s\S]*?-----END (RSA |EC |OPENSSH )?PRIVATE KEY-----/g,
-                name: 'Приватный ключ SSH/RSA',
+                name: 'Private Key (SSH/RSA)',
                 replacement: '***PRIVATE_KEY_REDACTED***',
                 example: '-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA0Z3VS5JJcds...\n-----END RSA PRIVATE KEY-----'
             }

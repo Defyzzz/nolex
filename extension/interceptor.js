@@ -149,7 +149,7 @@
             switch (userDecision.action) {
                 case 'cancel':
                     console.log('🛡️ ❌ Загрузка ОТМЕНЕНА пользователем');
-                    throw new Error('Загрузка файла отменена пользователем');
+                    throw new Error('Upload cancelled by user');
 
                 case 'proceed':
                     console.warn('🛡️ ⚡ Файл загружается БЕЗ ИЗМЕНЕНИЙ (пользователь разрешил)');
@@ -171,7 +171,7 @@
             }
 
         } catch (error) {
-            if (error.message.includes('отменена пользователем')) {
+            if (error.message.includes('cancelled by user')) {
                 throw error;
             }
 
@@ -202,7 +202,7 @@
                     const processedFile = await processFile(value);
                     newFormData.append(key, processedFile);
                 } catch (error) {
-                    if (error.message.includes('отменена пользователем')) {
+                    if (error.message.includes('cancelled by user')) {
                         throw error;
                     }
                     console.warn('🛡️ ⚠️ Ошибка обработки, используем оригинал');
@@ -218,7 +218,7 @@
                     const processedFile = await processFile(tempFile);
                     newFormData.append(key, processedFile);
                 } catch (error) {
-                    if (error.message.includes('отменена пользователем')) {
+                    if (error.message.includes('cancelled by user')) {
                         throw error;
                     }
                     newFormData.append(key, value);
@@ -260,7 +260,7 @@
                     }
                 }
             } catch (error) {
-                if (error.message.includes('отменена пользователем')) {
+                if (error.message.includes('cancelled by user')) {
                     console.log('🛡️ ❌ fetch запрос ОТМЕНЕН пользователем');
                     return Promise.reject(error);
                 }
@@ -296,7 +296,7 @@
                     originalXHRSend.call(this, body);
                 }
             }).catch(error => {
-                if (error.message.includes('отменена пользователем')) {
+                if (error.message.includes('cancelled by user')) {
                     console.log('🛡️ ❌ XHR запрос ОТМЕНЕН пользователем');
                     this.abort();
                 } else {
@@ -316,7 +316,7 @@
                 console.log('🛡️ ✓ Отправляем обработанный File через XHR');
                 originalXHRSend.call(this, processedFile);
             }).catch(error => {
-                if (error.message.includes('отменена пользователем')) {
+                if (error.message.includes('cancelled by user')) {
                     console.log('🛡️ ❌ XHR запрос ОТМЕНЕН пользователем');
                     this.abort();
                 } else {
@@ -337,7 +337,7 @@
                 console.log('🛡️ ✓ Отправляем обработанный Blob через XHR');
                 originalXHRSend.call(this, processedFile);
             }).catch(error => {
-                if (error.message.includes('отменена пользователем')) {
+                if (error.message.includes('cancelled by user')) {
                     console.log('🛡️ ❌ XHR запрос ОТМЕНЕН пользователем');
                     this.abort();
                 } else {
