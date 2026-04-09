@@ -47,7 +47,9 @@
                 "dialog.html",
                 "dialog.css",
                 "clipboard_interceptor.js",
-                "smart_generator.js"
+                "smart_generator.js",
+                "pro/ner-engine.js",
+                "pro/pdf-parser.js"
             ],
             "matches": [
                 "<all_urls>"

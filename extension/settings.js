@@ -11,6 +11,8 @@ const DEFAULT_EXTENSIONS = [
     '.pem', '.key', '.pub', '.crt', '.cer',
     // Docker/CI
     '.dockerfile', '.dockerignore',
+    // Documents
+    '.pdf',
     // Text
     '.txt', '.log', '.md'
 ];

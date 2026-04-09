@@ -119,7 +119,18 @@
         }
 
         try {
-            const fileContent = await file.text();
+            // Determine if file is PDF and extract text accordingly
+            let fileContent;
+            const isPdf = window.NolexPDF && window.NolexPDF.isPdf(file);
+
+            if (isPdf) {
+                console.log('📄 PDF file detected, extracting text...');
+                const arrayBuffer = await file.arrayBuffer();
+                fileContent = await window.NolexPDF.extractText(arrayBuffer);
+            } else {
+                fileContent = await file.text();
+            }
+
             console.log(`🛡️ ✓ Содержимое прочитано, длина: ${fileContent.length} символов`);
 
             if (!window.SensitiveDataDetector) {
@@ -127,7 +138,24 @@
                 return file;
             }
 
-            const findings = window.SensitiveDataDetector.analyze(fileContent);
+            let findings = window.SensitiveDataDetector.analyze(fileContent);
+
+            // NER analysis (Pro) — if enabled and loaded
+            if (window.NolexNER && window.NolexNER.isReady()) {
+                try {
+                    const nerFindings = await window.NolexNER.analyze(fileContent);
+                    if (nerFindings.length > 0) {
+                        console.log(`🧠 NER: ${nerFindings.length} entities found`);
+                        // Assign unique IDs continuing from regex findings
+                        let nextId = findings.length;
+                        nerFindings.forEach(f => { f.id = nextId++; });
+                        findings = findings.concat(nerFindings);
+                    }
+                } catch (e) {
+                    console.warn('🧠 NER analysis error:', e);
+                }
+            }
+
             console.log(`🛡️ 📊 Анализ завершен, найдено элементов: ${findings.length}`);
 
             if (findings.length === 0) {

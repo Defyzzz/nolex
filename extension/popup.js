@@ -33,12 +33,18 @@ const DATA_TYPES_INFO = {
     'replicate_token': { icon: '🔑', label: 'Replicate Token' },
     'cohere_key': { icon: '🔑', label: 'Cohere API Key' },
     'jwt_token': { icon: '🎫', label: 'JWT Token' },
-    'private_key': { icon: '🔐', label: 'Private Key' }
+    'private_key': { icon: '🔐', label: 'Private Key' },
+    // NER types
+    'ner_per': { icon: '👤', label: 'Person (AI)' },
+    'ner_loc': { icon: '📍', label: 'Location (AI)' },
+    'ner_org': { icon: '🏢', label: 'Organization (AI)' },
+    'ner_misc': { icon: '🔎', label: 'Entity (AI)' }
 };
 
 // DOM Elements
 let mainScreen, menuScreen;
 let extensionToggle, statusText;
+let nerToggle, nerStatusText;
 let totalCountNumber, statsListElement;
 let menuBtn, closeMenuBtn;
 let resetBtn;
@@ -62,6 +68,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Загрузить состояние
     await loadState();
+
+    // Загрузить NER состояние
+    await loadNerState();
 
     // Загрузить названия кастомных паттернов
     await loadCustomPatternNames();
@@ -110,6 +119,9 @@ function initDOMElements() {
     totalCountNumber = document.querySelector('.count-number');
     statsListElement = document.getElementById('stats-list');
 
+    nerToggle = document.getElementById('ner-toggle');
+    nerStatusText = document.getElementById('ner-status-text');
+
     menuBtn = document.getElementById('menu-btn');
     closeMenuBtn = document.getElementById('close-menu-btn');
     resetBtn = document.getElementById('reset-btn');
@@ -118,6 +130,9 @@ function initDOMElements() {
 function setupEventListeners() {
     // Toggle расширения
     extensionToggle.addEventListener('change', handleToggleChange);
+
+    // Toggle NER
+    nerToggle.addEventListener('change', handleNerToggle);
 
     // Навигация меню
     menuBtn.addEventListener('click', showMenu);
@@ -216,6 +231,50 @@ function renderStatistics() {
             </div>
         `;
     }).join('');
+}
+
+// NER state
+async function loadNerState() {
+    try {
+        const result = await chrome.storage.local.get(['nerEnabled']);
+        const enabled = result.nerEnabled || false;
+        nerToggle.checked = enabled;
+        updateNerStatus(enabled);
+    } catch (error) {
+        console.error('❌ Ошибка загрузки NER состояния:', error);
+    }
+}
+
+async function handleNerToggle(e) {
+    const enabled = e.target.checked;
+    console.log('🧠 NER toggle:', enabled);
+
+    try {
+        await chrome.storage.local.set({ nerEnabled: enabled });
+        updateNerStatus(enabled);
+
+        // Notify all tabs about NER state change
+        const tabs = await chrome.tabs.query({});
+        tabs.forEach(tab => {
+            chrome.tabs.sendMessage(tab.id, {
+                type: 'NER_TOGGLED',
+                enabled: enabled
+            }).catch(() => {});
+        });
+    } catch (error) {
+        console.error('❌ Ошибка обновления NER:', error);
+        e.target.checked = !enabled;
+    }
+}
+
+function updateNerStatus(enabled) {
+    if (enabled) {
+        nerStatusText.textContent = 'Active';
+        nerStatusText.className = 'status-text active';
+    } else {
+        nerStatusText.textContent = 'Inactive';
+        nerStatusText.className = 'status-text inactive';
+    }
 }
 
 // Обработчики событий

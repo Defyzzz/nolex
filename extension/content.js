@@ -36,6 +36,19 @@ async function injectAllScripts() {
         await injectScript('clipboard_interceptor.js');
         console.log('🛡️ Clipboard_interceptor.js внедрен');
 
+        // Pro modules
+        const proState = await chrome.storage.local.get(['nerEnabled']);
+
+        // PDF parser — always inject (Pro feature, needed for document scanning)
+        await injectScript('pro/pdf-parser.js');
+        console.log('📄 PDF parser внедрен');
+
+        // NER engine — inject if enabled
+        if (proState.nerEnabled) {
+            await injectScript('pro/ner-engine.js');
+            console.log('🧠 NER engine внедрен');
+        }
+
         console.log('🛡️ Все модули AI Sanitizer загружены');
     } catch (error) {
         console.error('🛡️ Ошибка загрузки модулей:', error);
@@ -122,8 +135,19 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
     if (message.type === 'RELOAD_PATTERNS') {
         console.log('🔄 Content: Перезагрузка custom patterns');
-        // Reload and inject patterns
         loadAndInjectCustomPatterns();
+    }
+
+    if (message.type === 'NER_TOGGLED') {
+        console.log('🧠 Content: NER переключен:', message.enabled);
+        if (message.enabled) {
+            // Inject NER engine if not already loaded
+            injectScript('pro/ner-engine.js').then(() => {
+                console.log('🧠 NER engine внедрен');
+            }).catch(() => {});
+        }
+        // Notify page context
+        window.postMessage({ type: 'NOLEX_NER_TOGGLED', enabled: message.enabled }, '*');
     }
 });
 

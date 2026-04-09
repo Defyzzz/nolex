@@ -173,19 +173,43 @@
             return;
         }
 
-        // Анализируем текст
-        const findings = window.SensitiveDataDetector.analyze(clipboardText);
-        console.log(`🛡️ 📊 Анализ завершен, найдено элементов: ${findings.length}`);
+        // Анализируем текст (regex — synchronous)
+        let findings = window.SensitiveDataDetector.analyze(clipboardText);
+        const nerEnabled = window.NolexNER && window.NolexNER.isReady();
 
-        // Если чувствительных данных нет - разрешаем вставку
-        if (findings.length === 0) {
-            console.log('🛡️ ✅ Текст чист - нет чувствительных данных');
-            return;
+        // If regex found something OR NER is enabled (may find more) — block paste early
+        if (findings.length > 0 || nerEnabled) {
+            event.preventDefault();
+            event.stopPropagation();
         }
 
-        // Блокируем стандартное поведение вставки
-        event.preventDefault();
-        event.stopPropagation();
+        // NER analysis (Pro) — async, runs after preventDefault
+        if (nerEnabled) {
+            try {
+                const nerFindings = await window.NolexNER.analyze(clipboardText);
+                if (nerFindings.length > 0) {
+                    console.log(`🧠 NER: ${nerFindings.length} entities found`);
+                    // Assign unique IDs continuing from regex findings
+                    let nextId = findings.length;
+                    nerFindings.forEach(f => { f.id = nextId++; });
+                    findings = findings.concat(nerFindings);
+                }
+            } catch (e) {
+                console.warn('🧠 NER analysis error:', e);
+            }
+        }
+
+        console.log(`🛡️ 📊 Анализ завершен, найдено элементов: ${findings.length}`);
+
+        // Если чувствительных данных нет — вставляем текст как есть
+        if (findings.length === 0) {
+            console.log('🛡️ ✅ Текст чист - нет чувствительных данных');
+            // We already blocked paste, so insert manually
+            if (nerEnabled) {
+                insertTextIntoElement(event.target, clipboardText);
+            }
+            return;
+        }
 
         console.warn(`🛡️ ⚠️ В буфере обмена найдено ${findings.length} потенциально чувствительных элементов!`, findings);
 
