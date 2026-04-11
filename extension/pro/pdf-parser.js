@@ -57,24 +57,31 @@
             const page = await pdf.getPage(i);
             const textContent = await page.getTextContent();
 
-            // Join text items with proper spacing
+            // Collect items with positions, then sort top-to-bottom, left-to-right
+            const items = textContent.items
+                .filter(item => item.str !== undefined && item.str.length > 0)
+                .map(item => ({
+                    str: item.str,
+                    y: item.transform ? Math.round(item.transform[5]) : 0,
+                    x: item.transform ? Math.round(item.transform[4]) : 0
+                }));
+
+            // Sort by Y descending (PDF Y=0 is bottom), then X ascending
+            items.sort((a, b) => b.y - a.y || a.x - b.x);
+
+            // Join into text with proper line breaks
             let pageText = '';
             let lastY = null;
 
-            for (const item of textContent.items) {
-                if (item.str === undefined) continue;
-
-                const y = item.transform ? item.transform[5] : null;
-
-                // New line if Y position changed significantly
-                if (lastY !== null && y !== null && Math.abs(y - lastY) > 5) {
+            for (const item of items) {
+                if (lastY !== null && Math.abs(item.y - lastY) > 5) {
                     pageText += '\n';
                 } else if (pageText.length > 0 && !pageText.endsWith('\n') && !pageText.endsWith(' ')) {
                     pageText += ' ';
                 }
 
                 pageText += item.str;
-                lastY = y;
+                lastY = item.y;
             }
 
             pageTexts.push(pageText.trim());

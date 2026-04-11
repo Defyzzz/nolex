@@ -64,21 +64,22 @@
                 };
             } else if (prefix === 'I-' && current && current.type === type) {
                 if (isSubword(word)) {
-                    // Definite subword — concatenate without space
+                    // Definite subword (##suffix) — concatenate without space
                     const lastIdx = current.parts.length - 1;
                     current.parts[lastIdx] += stripSubword(word);
-                } else {
-                    // Could be a new word OR a continuation without ## prefix
-                    // Check if the previous part + this word appear joined in original text
-                    const lastPart = current.parts[current.parts.length - 1];
-                    const joined = lastPart + word;
-                    if (originalText && originalText.toLowerCase().includes(joined.toLowerCase())) {
-                        // They appear joined in original — concatenate
-                        current.parts[current.parts.length - 1] = joined;
+                } else if (word.length === 1 && !isSubword(word)) {
+                    // Single char without ## — might be start of a split word
+                    // Check if next token is ## continuation
+                    const nextToken = i + 1 < rawEntities.length ? rawEntities[i + 1] : null;
+                    if (nextToken && isSubword(nextToken.word) && nextToken.entity.substring(2) === type) {
+                        // Will be joined with next token — start new part
+                        current.parts.push(word);
                     } else {
-                        // Separate word in same entity
                         current.parts.push(word);
                     }
+                } else {
+                    // Regular word without ## — always separate word in the entity
+                    current.parts.push(word);
                 }
                 current.scoreSum += score;
                 current.tokenCount += 1;
@@ -109,7 +110,27 @@
                     confidence: Math.round((e.scoreSum / e.tokenCount) * 100)
                 };
             })
-            .filter(e => e.confidence >= 50 && e.text.length >= 2);
+            .filter(e => {
+                // For Person entities, use lower threshold (names often have low-confidence middle tokens)
+                const threshold = e.type === 'PER' ? 60 : 75;
+                return e.confidence >= threshold && e.text.length >= 3;
+            });
+    }
+
+    /**
+     * Remove entities that are substrings of longer entities of the same type.
+     * "Дуна" is removed if "Дунаев" exists. "Кингисепп" kept if no longer version.
+     */
+    function deduplicateEntities(entities) {
+        return entities.filter((entity, i) => {
+            // Check if this entity's text is a substring of any other entity's text
+            return !entities.some((other, j) => {
+                if (i === j) return false;
+                if (other.type !== entity.type) return false;
+                if (other.text.length <= entity.text.length) return false;
+                return other.text.toLowerCase().includes(entity.text.toLowerCase());
+            });
+        });
     }
 
     /**
@@ -253,18 +274,70 @@
             try {
                 const startTime = Date.now();
 
-                // Pre-process: convert UPPERCASE words to Title Case for better NER
-                // NER models work poorly with all-caps text like "GRACHEV IVAN"
-                const normalizedText = text.replace(
-                    /\b([A-ZА-ЯЁ]{2,})\b/g,
+                // Pre-process: strip XML/HTML tags — NER only needs text content
+                // Add newline after closing tags to prevent word merging
+                let cleanText = text
+                    .replace(/<\/[^>]+>/g, '\n')       // closing tags → newline
+                    .replace(/<[^>]+>/g, ' ')           // opening tags → space
+                    .replace(/[^\S\n]+/g, ' ')          // collapse spaces (keep newlines)
+                    .replace(/\n+/g, '\n')              // collapse newlines
+                    .trim();
+
+                // Convert UPPERCASE words to Title Case for better NER
+                const normalizedText = cleanText.replace(
+                    /(?<![a-zA-Zа-яА-ЯёЁ])([A-ZА-ЯЁ]{2,})(?![a-zA-Zа-яА-ЯёЁ])/g,
                     (match) => match.charAt(0) + match.slice(1).toLowerCase()
                 );
 
-                const raw = await nerPipeline(normalizedText);
-                const entities = mergeEntities(raw, normalizedText);
+                // Split into chunks by sentences/lines (BERT limit ~512 tokens)
+                const MAX_CHUNK_CHARS = 200;
+                const MAX_CHUNKS = 150;
+                let allEntities = [];
+
+                // Split text into natural segments (lines, sentences)
+                const lines = normalizedText.split(/\n+/);
+                const chunks = [];
+                let currentChunk = '';
+
+                for (const line of lines) {
+                    if (currentChunk.length + line.length + 1 > MAX_CHUNK_CHARS && currentChunk.length > 0) {
+                        chunks.push(currentChunk);
+                        currentChunk = line;
+                    } else {
+                        currentChunk += (currentChunk ? '\n' : '') + line;
+                    }
+                }
+                if (currentChunk.trim()) chunks.push(currentChunk);
+
+                if (chunks.length <= 1) {
+                    const raw = await nerPipeline(normalizedText);
+                    allEntities = mergeEntities(raw, normalizedText);
+                } else {
+                    const seenTexts = new Set();
+                    const total = Math.min(chunks.length, MAX_CHUNKS);
+
+                    for (let i = 0; i < total; i++) {
+                        const raw = await nerPipeline(chunks[i]);
+                        const chunkEntities = mergeEntities(raw, chunks[i]);
+
+                        for (const entity of chunkEntities) {
+                            const key = `${entity.type}:${entity.text}`;
+                            if (!seenTexts.has(key)) {
+                                seenTexts.add(key);
+                                allEntities.push(entity);
+                            }
+                        }
+                    }
+
+                    console.log(`🧠 NER: Processed ${total} chunks (${normalizedText.length} chars)`);
+                }
+
+                // Deduplicate: remove substrings of longer entities
+                const cleanEntities = deduplicateEntities(allEntities);
+                console.log(`🧠 NER: ${allEntities.length} raw → ${cleanEntities.length} after dedup`);
 
                 // Map findings back to original text positions
-                const findings = entitiesToFindings(entities, text);
+                const findings = entitiesToFindings(cleanEntities, text);
                 const inferTime = Date.now() - startTime;
 
                 console.log(`🧠 NER: Found ${findings.length} entities in ${inferTime}ms`);
