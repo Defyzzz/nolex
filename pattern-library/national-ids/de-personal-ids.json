@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "German Personal IDs",
+  "description": "German Personalausweis, Steuer-ID, and Sozialversicherungsnummer",
+  "patterns": [
+    {
+      "name": "German Tax ID (Steuer-ID)",
+      "regex": "\\b\\d{11}\\b",
+      "flags": "g",
+      "replacement": "***DE_TAX_ID_REDACTED***"
+    },
+    {
+      "name": "German ID Card Number",
+      "regex": "\\b[CFGHJKLMNPRTVWXYZ0-9]{9}\\b",
+      "flags": "g",
+      "replacement": "***DE_ID_REDACTED***"
+    }
+  ]
+}

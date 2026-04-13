@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Spanish DNI & NIE",
+  "description": "Spanish DNI (12345678Z) and NIE (X1234567L) formats",
+  "patterns": [
+    {
+      "name": "Spanish DNI",
+      "regex": "\\b\\d{8}[A-Z]\\b",
+      "flags": "g",
+      "replacement": "***ES_DNI_REDACTED***"
+    },
+    {
+      "name": "Spanish NIE",
+      "regex": "\\b[XYZ]\\d{7}[A-Z]\\b",
+      "flags": "g",
+      "replacement": "***ES_NIE_REDACTED***"
+    }
+  ]
+}

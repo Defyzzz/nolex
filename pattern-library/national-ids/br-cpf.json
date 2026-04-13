@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Brazilian CPF & CNPJ",
+  "description": "Brazilian CPF (123.456.789-09) and CNPJ (12.345.678/0001-95)",
+  "patterns": [
+    {
+      "name": "Brazilian CPF",
+      "regex": "\\b\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}\\b",
+      "flags": "g",
+      "replacement": "***CPF_REDACTED***"
+    },
+    {
+      "name": "Brazilian CNPJ",
+      "regex": "\\b\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}\\b",
+      "flags": "g",
+      "replacement": "***CNPJ_REDACTED***"
+    }
+  ]
+}

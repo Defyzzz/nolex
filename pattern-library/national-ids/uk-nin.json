@@ -1,0 +1,14 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "UK National Insurance Number",
+  "description": "UK NIN format: AB 12 34 56 C",
+  "patterns": [
+    {
+      "name": "UK National Insurance Number",
+      "regex": "\\b[A-CEGHJ-PR-TW-Z]{2}[\\s.-]?\\d{2}[\\s.-]?\\d{2}[\\s.-]?\\d{2}[\\s.-]?[A-D]\\b",
+      "flags": "g",
+      "replacement": "***UK_NIN_REDACTED***"
+    }
+  ]
+}

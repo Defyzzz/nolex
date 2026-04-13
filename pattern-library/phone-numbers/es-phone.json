@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Spanish Phone Numbers",
+  "description": "Spanish phone formats: +34 612 345 678, 612 345 678, 91 123 45 67",
+  "patterns": [
+    {
+      "name": "Spanish Phone (+34)",
+      "regex": "\\+34[\\s.-]?[6-9]\\d{2}[\\s.-]?\\d{3}[\\s.-]?\\d{3}",
+      "flags": "g",
+      "replacement": "***ES_PHONE_REDACTED***"
+    },
+    {
+      "name": "Spanish Phone (local)",
+      "regex": "\\b[6-9]\\d{2}[\\s.-]?\\d{3}[\\s.-]?\\d{3}\\b",
+      "flags": "g",
+      "replacement": "***ES_PHONE_REDACTED***"
+    }
+  ]
+}

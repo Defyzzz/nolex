@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Indian Phone Numbers",
+  "description": "Indian phone formats: +91 98765 43210, 098765 43210",
+  "patterns": [
+    {
+      "name": "Indian Mobile (+91)",
+      "regex": "\\+91[\\s.-]?[6-9]\\d{4}[\\s.-]?\\d{5}",
+      "flags": "g",
+      "replacement": "***IN_PHONE_REDACTED***"
+    },
+    {
+      "name": "Indian Mobile (0-prefix)",
+      "regex": "\\b0?[6-9]\\d{4}[\\s.-]?\\d{5}\\b",
+      "flags": "g",
+      "replacement": "***IN_PHONE_REDACTED***"
+    }
+  ]
+}

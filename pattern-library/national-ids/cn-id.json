@@ -1,0 +1,14 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Chinese ID Card Number",
+  "description": "Chinese Resident Identity Card: 18-digit number (110101199001011234)",
+  "patterns": [
+    {
+      "name": "Chinese ID Card (18 digits)",
+      "regex": "\\b\\d{6}(?:19|20)\\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\\d|3[01])\\d{3}[\\dXx]\\b",
+      "flags": "g",
+      "replacement": "***CN_ID_REDACTED***"
+    }
+  ]
+}

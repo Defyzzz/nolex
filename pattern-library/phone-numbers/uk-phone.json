@@ -1,0 +1,26 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "UK Phone Numbers",
+  "description": "UK phone formats: +44 20 7946 0958, 07911 123456, 020 7946 0958",
+  "patterns": [
+    {
+      "name": "UK Phone (+44)",
+      "regex": "\\+44[\\s.-]?\\d{2,4}[\\s.-]?\\d{3,4}[\\s.-]?\\d{3,4}",
+      "flags": "g",
+      "replacement": "***UK_PHONE_REDACTED***"
+    },
+    {
+      "name": "UK Mobile (07xxx)",
+      "regex": "\\b07\\d{3}[\\s.-]?\\d{3}[\\s.-]?\\d{3}\\b",
+      "flags": "g",
+      "replacement": "***UK_PHONE_REDACTED***"
+    },
+    {
+      "name": "UK Landline (0xx)",
+      "regex": "\\b0[1-9]\\d{1,3}[\\s.-]?\\d{3,4}[\\s.-]?\\d{3,4}\\b",
+      "flags": "g",
+      "replacement": "***UK_PHONE_REDACTED***"
+    }
+  ]
+}

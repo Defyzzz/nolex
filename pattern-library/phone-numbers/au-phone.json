@@ -1,0 +1,26 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Australian Phone Numbers",
+  "description": "Australian phone formats: +61 4 1234 5678, 0412 345 678, (02) 1234 5678",
+  "patterns": [
+    {
+      "name": "Australian Phone (+61)",
+      "regex": "\\+61[\\s.-]?[2-478][\\s.-]?\\d{4}[\\s.-]?\\d{4}",
+      "flags": "g",
+      "replacement": "***AU_PHONE_REDACTED***"
+    },
+    {
+      "name": "Australian Mobile (04xx)",
+      "regex": "\\b04\\d{2}[\\s.-]?\\d{3}[\\s.-]?\\d{3}\\b",
+      "flags": "g",
+      "replacement": "***AU_PHONE_REDACTED***"
+    },
+    {
+      "name": "Australian Landline (0x)",
+      "regex": "\\(?0[2-478]\\)?[\\s.-]?\\d{4}[\\s.-]?\\d{4}",
+      "flags": "g",
+      "replacement": "***AU_PHONE_REDACTED***"
+    }
+  ]
+}

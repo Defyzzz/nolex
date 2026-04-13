@@ -1,0 +1,14 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Canadian Social Insurance Number",
+  "description": "Canadian SIN format: 123-456-789, 123 456 789",
+  "patterns": [
+    {
+      "name": "Canadian SIN",
+      "regex": "\\b\\d{3}[\\s.-]\\d{3}[\\s.-]\\d{3}\\b",
+      "flags": "g",
+      "replacement": "***CA_SIN_REDACTED***"
+    }
+  ]
+}

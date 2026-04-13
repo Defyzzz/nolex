@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "French Phone Numbers",
+  "description": "French phone formats: +33 1 23 45 67 89, 01 23 45 67 89, 06 12 34 56 78",
+  "patterns": [
+    {
+      "name": "French Phone (+33)",
+      "regex": "\\+33[\\s.-]?[1-9][\\s.-]?\\d{2}[\\s.-]?\\d{2}[\\s.-]?\\d{2}[\\s.-]?\\d{2}",
+      "flags": "g",
+      "replacement": "***FR_PHONE_REDACTED***"
+    },
+    {
+      "name": "French Phone (0x)",
+      "regex": "\\b0[1-9][\\s.-]?\\d{2}[\\s.-]?\\d{2}[\\s.-]?\\d{2}[\\s.-]?\\d{2}\\b",
+      "flags": "g",
+      "replacement": "***FR_PHONE_REDACTED***"
+    }
+  ]
+}

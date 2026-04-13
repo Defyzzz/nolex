@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Canadian Phone Numbers",
+  "description": "Canadian phone formats: +1 416-555-0199, (416) 555-0199 (same as US NANP)",
+  "patterns": [
+    {
+      "name": "Canadian Phone (+1)",
+      "regex": "\\+1[\\s.-]?\\(?[2-9]\\d{2}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}",
+      "flags": "g",
+      "replacement": "***CA_PHONE_REDACTED***"
+    },
+    {
+      "name": "Canadian Phone (local)",
+      "regex": "\\(?[2-9]\\d{2}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}",
+      "flags": "g",
+      "replacement": "***CA_PHONE_REDACTED***"
+    }
+  ]
+}
