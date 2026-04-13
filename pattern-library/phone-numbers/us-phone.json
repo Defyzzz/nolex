@@ -1,0 +1,20 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "US Phone Numbers",
+  "description": "US phone formats: (555) 123-4567, 555-123-4567, +1 555 123 4567",
+  "patterns": [
+    {
+      "name": "US Phone (parentheses)",
+      "regex": "\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}",
+      "flags": "g",
+      "replacement": "***US_PHONE_REDACTED***"
+    },
+    {
+      "name": "US Phone (+1 prefix)",
+      "regex": "\\+1[\\s.-]?\\(?\\d{3}\\)?[\\s.-]?\\d{3}[\\s.-]?\\d{4}",
+      "flags": "g",
+      "replacement": "***US_PHONE_REDACTED***"
+    }
+  ]
+}

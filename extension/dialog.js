@@ -712,6 +712,43 @@
                 .text-preview::-webkit-scrollbar-thumb:hover {
                     background: rgba(255, 255, 255, 0.3);
                 }
+
+                /* Thank You Toast */
+                .nolex-toast {
+                    position: fixed;
+                    bottom: 30px;
+                    left: 50%;
+                    transform: translateX(-50%) translateY(20px);
+                    background: linear-gradient(135deg, #48bb78, #38a169);
+                    color: #fff;
+                    padding: 14px 28px;
+                    border-radius: 12px;
+                    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+                    font-size: 14px;
+                    font-weight: 600;
+                    box-shadow: 0 8px 30px rgba(72, 187, 120, 0.4);
+                    z-index: 2147483647;
+                    opacity: 0;
+                    transition: opacity 0.4s ease, transform 0.4s ease;
+                    pointer-events: none;
+                }
+
+                .nolex-toast-visible {
+                    opacity: 1;
+                    transform: translateX(-50%) translateY(0);
+                }
+
+                .nolex-toast-icon {
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 20px;
+                    height: 20px;
+                    background: rgba(255, 255, 255, 0.25);
+                    border-radius: 50%;
+                    margin-right: 10px;
+                    font-size: 12px;
+                }
             `;
             document.head.appendChild(style);
         },
@@ -1035,6 +1072,11 @@
          */
         close(result) {
             if (this.currentDialog) {
+                // Show thank-you toast if user left feedback
+                if (result && result.feedback) {
+                    this.showThankYouToast();
+                }
+
                 this.currentDialog.style.animation = 'fadeOut 0.3s ease-out';
                 setTimeout(() => {
                     if (this.currentDialog && this.currentDialog.parentNode) {
@@ -1048,6 +1090,25 @@
                     }
                 }, 300);
             }
+        },
+
+        /**
+         * Shows a thank-you toast after feedback is submitted
+         */
+        showThankYouToast() {
+            const toast = document.createElement('div');
+            toast.className = 'nolex-toast';
+            toast.innerHTML = '<span class="nolex-toast-icon">✓</span> Thank you for your feedback!';
+            document.body.appendChild(toast);
+
+            // Trigger animation
+            requestAnimationFrame(() => toast.classList.add('nolex-toast-visible'));
+
+            // Auto-remove after 3 seconds
+            setTimeout(() => {
+                toast.classList.remove('nolex-toast-visible');
+                setTimeout(() => toast.remove(), 400);
+            }, 3000);
         },
 
         /**

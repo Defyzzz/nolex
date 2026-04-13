@@ -240,9 +240,27 @@ async function loadNerState() {
         const enabled = result.nerEnabled || false;
         nerToggle.checked = enabled;
         updateNerStatus(enabled);
+
+        // If NER is enabled, check if model is loaded or still loading
+        if (enabled) {
+            checkNerStatusOnLoad();
+        }
     } catch (error) {
         console.error('❌ Ошибка загрузки NER состояния:', error);
     }
+}
+
+async function checkNerStatusOnLoad() {
+    try {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tabs[0]) {
+            const response = await chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_NER_STATUS' }).catch(() => null);
+            if (response && response.loading) {
+                showNerOnboarding();
+            }
+            // If ready — don't show anything, model is already loaded
+        }
+    } catch (e) {}
 }
 
 async function handleNerToggle(e) {
@@ -252,6 +270,13 @@ async function handleNerToggle(e) {
     try {
         await chrome.storage.local.set({ nerEnabled: enabled });
         updateNerStatus(enabled);
+
+        if (enabled) {
+            // Check if model is already cached/ready before showing onboarding
+            checkNerBeforeOnboarding();
+        } else {
+            hideNerOnboarding();
+        }
 
         // Notify all tabs about NER state change
         const tabs = await chrome.tabs.query({});
@@ -274,6 +299,91 @@ function updateNerStatus(enabled) {
     } else {
         nerStatusText.textContent = 'Inactive';
         nerStatusText.className = 'status-text inactive';
+    }
+}
+
+// NER Onboarding & Progress
+async function checkNerBeforeOnboarding() {
+    try {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tabs[0]) {
+            const response = await chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_NER_STATUS' }).catch(() => null);
+            if (response && response.ready) {
+                // Model already cached, no need for onboarding
+                return;
+            }
+        }
+    } catch (e) {}
+    showNerOnboarding();
+}
+
+function showNerOnboarding() {
+    const onboarding = document.getElementById('ner-onboarding');
+    const progressFill = document.getElementById('ner-progress-fill');
+    const progressText = document.getElementById('ner-progress-text');
+    const title = onboarding.querySelector('.ner-onboarding-title');
+
+    onboarding.classList.remove('hidden', 'ready');
+    progressFill.className = 'ner-progress-fill indeterminate';
+    progressFill.style.width = '';
+    title.textContent = 'AI model loading...';
+    progressText.textContent = 'Downloading model (~180MB)...';
+
+    // Poll NER status from active tab
+    pollNerStatus();
+}
+
+function hideNerOnboarding() {
+    const onboarding = document.getElementById('ner-onboarding');
+    onboarding.classList.add('hidden');
+    onboarding.classList.remove('ready');
+}
+
+async function pollNerStatus() {
+    const onboarding = document.getElementById('ner-onboarding');
+    if (onboarding.classList.contains('hidden')) return;
+
+    try {
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+        if (tabs[0]) {
+            const response = await chrome.tabs.sendMessage(tabs[0].id, { type: 'GET_NER_STATUS' }).catch(() => null);
+            if (response) {
+                updateNerProgress(response);
+                if (response.ready) return; // Done, stop polling
+            }
+        }
+    } catch (e) {}
+
+    // Poll again in 1 second
+    setTimeout(pollNerStatus, 1000);
+}
+
+function updateNerProgress(status) {
+    const onboarding = document.getElementById('ner-onboarding');
+    const progressFill = document.getElementById('ner-progress-fill');
+    const progressText = document.getElementById('ner-progress-text');
+    const title = onboarding.querySelector('.ner-onboarding-title');
+
+    if (status.ready) {
+        onboarding.classList.add('ready');
+        progressFill.className = 'ner-progress-fill';
+        progressFill.style.width = '100%';
+        title.textContent = 'AI Detection ready';
+        progressText.textContent = 'Model loaded — detecting names, places, organizations';
+
+        // Auto-hide after 3 seconds
+        setTimeout(() => {
+            onboarding.classList.add('hidden');
+        }, 3000);
+    } else if (status.error) {
+        progressFill.className = 'ner-progress-fill';
+        progressFill.style.width = '0%';
+        title.textContent = 'Failed to load AI model';
+        progressText.textContent = status.error;
+    } else if (status.loading) {
+        progressFill.className = 'ner-progress-fill indeterminate';
+        title.textContent = 'AI model loading...';
+        progressText.textContent = 'Downloading model (~180MB)...';
     }
 }
 

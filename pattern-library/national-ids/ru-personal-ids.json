@@ -1,0 +1,32 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Russian Personal IDs",
+  "description": "SNILS, INN, passport number formats used in Russia",
+  "patterns": [
+    {
+      "name": "SNILS",
+      "regex": "\\b\\d{3}-\\d{3}-\\d{3}\\s?\\d{2}\\b",
+      "flags": "g",
+      "replacement": "***SNILS_REDACTED***"
+    },
+    {
+      "name": "INN (individual, 12 digits)",
+      "regex": "\\b\\d{12}\\b",
+      "flags": "g",
+      "replacement": "***INN_REDACTED***"
+    },
+    {
+      "name": "INN (organization, 10 digits)",
+      "regex": "(?:ИНН|INN)[\\s:]*\\d{10}",
+      "flags": "g",
+      "replacement": "***INN_REDACTED***"
+    },
+    {
+      "name": "Russian Passport (series + number)",
+      "regex": "\\b\\d{2}\\s?\\d{2}\\s?\\d{6}\\b",
+      "flags": "g",
+      "replacement": "***PASSPORT_REDACTED***"
+    }
+  ]
+}

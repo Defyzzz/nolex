@@ -1,0 +1,26 @@
+{
+  "nolex_pattern_group": true,
+  "version": 1,
+  "name": "Environment File Secrets",
+  "description": "Sensitive key=value pairs commonly found in .env, config, and YAML files",
+  "patterns": [
+    {
+      "name": "Generic Password in Config",
+      "regex": "(?:PASSWORD|PASSWD|SECRET|TOKEN|API_KEY|APIKEY|ACCESS_KEY|PRIVATE_KEY)[\\s]*[=:]+[\\s]*[\"']?([^\\s'\"]{4,})[\"']?",
+      "flags": "gi",
+      "replacement": "***CONFIG_SECRET_REDACTED***"
+    },
+    {
+      "name": "Database URL in Config",
+      "regex": "(?:DATABASE_URL|DB_URL|MONGO_URI|REDIS_URL)[\\s]*[=:]+[\\s]*[\"']?([^\\s'\"]{8,})[\"']?",
+      "flags": "gi",
+      "replacement": "***DB_URL_REDACTED***"
+    },
+    {
+      "name": "Bearer Token in Header",
+      "regex": "(?:Authorization|Bearer)[\\s:]+[\"']?Bearer\\s+[A-Za-z0-9._~+/=-]{20,}[\"']?",
+      "flags": "gi",
+      "replacement": "***BEARER_TOKEN_REDACTED***"
+    }
+  ]
+}

@@ -50,6 +50,17 @@
                 </label>
             </div>
 
+            <!-- NER Onboarding (shown on first enable) -->
+            <div id="ner-onboarding" class="ner-onboarding hidden">
+                <div class="ner-onboarding-icon">🧠</div>
+                <p class="ner-onboarding-title">AI model loading...</p>
+                <p class="ner-onboarding-desc">~180MB download on first use. Cached locally after that. All processing stays on your device.</p>
+                <div class="ner-progress-bar">
+                    <div id="ner-progress-fill" class="ner-progress-fill"></div>
+                </div>
+                <span id="ner-progress-text" class="ner-progress-text">Preparing...</span>
+            </div>
+
             <!-- Statistics Section -->
             <div class="statistics-section">
                 <h2 class="section-title">Detected Sensitive Data</h2>

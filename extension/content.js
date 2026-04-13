@@ -138,6 +138,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         loadAndInjectCustomPatterns();
     }
 
+    if (message.type === 'GET_NER_STATUS') {
+        // Ask page context for NER status via postMessage roundtrip
+        const reqId = 'ner_status_' + Date.now();
+        const handler = (event) => {
+            if (event.source !== window) return;
+            if (event.data && event.data.type === 'NOLEX_NER_STATUS_RESULT' && event.data.reqId === reqId) {
+                window.removeEventListener('message', handler);
+                sendResponse(event.data.status);
+            }
+        };
+        window.addEventListener('message', handler);
+        window.postMessage({ type: 'NOLEX_NER_STATUS_REQ', reqId }, '*');
+        // Timeout fallback
+        setTimeout(() => {
+            window.removeEventListener('message', handler);
+            sendResponse({ ready: false, loading: false, error: 'NER not injected' });
+        }, 500);
+        return true; // async sendResponse
+    }
+
     if (message.type === 'NER_TOGGLED') {
         console.log('🧠 Content: NER переключен:', message.enabled);
         if (message.enabled) {

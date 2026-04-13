@@ -367,6 +367,18 @@
                 window.NolexNER.load();
             }
         }
+        // Status request from popup via content.js
+        if (event.data && event.data.type === 'NOLEX_NER_STATUS_REQ') {
+            window.postMessage({
+                type: 'NOLEX_NER_STATUS_RESULT',
+                reqId: event.data.reqId,
+                status: {
+                    ready: window.NolexNER.isReady(),
+                    loading: window.NolexNER.isLoading(),
+                    error: window.NolexNER.getError()
+                }
+            }, '*');
+        }
     });
 
     console.log('🧠 NolexNER engine loaded, model loading in background...');
