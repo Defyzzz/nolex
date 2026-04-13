@@ -49,7 +49,8 @@
                 "clipboard_interceptor.js",
                 "smart_generator.js",
                 "pro/ner-engine.js",
-                "pro/pdf-parser.js"
+                "pro/pdf-parser.js",
+                "pro/structured-scanner.js"
             ],
             "matches": [
                 "<all_urls>"

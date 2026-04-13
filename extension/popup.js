@@ -34,6 +34,8 @@ const DATA_TYPES_INFO = {
     'cohere_key': { icon: '🔑', label: 'Cohere API Key' },
     'jwt_token': { icon: '🎫', label: 'JWT Token' },
     'private_key': { icon: '🔐', label: 'Private Key' },
+    // Structured scanner types
+    'structured_secret': { icon: '🔧', label: 'Sensitive Config Value' },
     // NER types
     'ner_per': { icon: '👤', label: 'Person (AI)' },
     'ner_loc': { icon: '📍', label: 'Location (AI)' },

@@ -140,6 +140,21 @@
 
             let findings = window.SensitiveDataDetector.analyze(fileContent);
 
+            // Structured data analysis — detect secrets by key names in JSON/XML/YAML/.env
+            if (window.NolexStructured) {
+                try {
+                    const structFindings = window.NolexStructured.analyze(fileContent);
+                    if (structFindings.length > 0) {
+                        console.log(`🔧 Structured: ${structFindings.length} sensitive values found`);
+                        let nextId = findings.length;
+                        structFindings.forEach(f => { f.id = nextId++; });
+                        findings = findings.concat(structFindings);
+                    }
+                } catch (e) {
+                    console.warn('🔧 Structured analysis error:', e);
+                }
+            }
+
             // NER analysis (Pro) — if enabled and loaded
             if (window.NolexNER && window.NolexNER.isReady()) {
                 try {

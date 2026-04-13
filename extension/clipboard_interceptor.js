@@ -175,6 +175,22 @@
 
         // Анализируем текст (regex — synchronous)
         let findings = window.SensitiveDataDetector.analyze(clipboardText);
+
+        // Structured data analysis — detect secrets by key names
+        if (window.NolexStructured) {
+            try {
+                const structFindings = window.NolexStructured.analyze(clipboardText);
+                if (structFindings.length > 0) {
+                    console.log(`🔧 Structured: ${structFindings.length} sensitive values found`);
+                    let nextId = findings.length;
+                    structFindings.forEach(f => { f.id = nextId++; });
+                    findings = findings.concat(structFindings);
+                }
+            } catch (e) {
+                console.warn('🔧 Structured analysis error:', e);
+            }
+        }
+
         const nerEnabled = window.NolexNER && window.NolexNER.isReady();
 
         // If regex found something OR NER is enabled (may find more) — block paste early

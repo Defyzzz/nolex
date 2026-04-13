@@ -43,6 +43,10 @@ async function injectAllScripts() {
         await injectScript('pro/pdf-parser.js');
         console.log('📄 PDF parser внедрен');
 
+        // Structured scanner — always inject (detects secrets by key names in JSON/XML/YAML/.env)
+        await injectScript('pro/structured-scanner.js');
+        console.log('🔧 Structured scanner внедрен');
+
         // NER engine — inject if enabled
         if (proState.nerEnabled) {
             await injectScript('pro/ner-engine.js');
